@@ -1,5 +1,4 @@
 import pyautogui
-# from time import time
 import time
 import psutil
 from pathlib import Path
@@ -8,14 +7,14 @@ NEWTON_TEST_DIR = Path(
     r"C:\Users\TRI Test Machine\AppData\Local\Newton\Tests"
 )
 
-JOG_HIGH_SPEED_BOX_X_COORD = 570
-JOG_HIGH_SPEED_BOX_Y_COORD = 540
-JOG_LOW_SPEED_BOX_X_COORD = 742
-JOG_LOW_SPEED_BOX_Y_COORD = 542
-JOG_HOME_RATE_BOX_X_COORD = 900
-JOG_HOME_RATE_BOX_Y_COORD = 540
-JOG_HOME_POSITION_BOX_X_COORD = 1056
-JOG_HOME_POSITION_BOX_Y_COORD = 538
+MM_JOG_HIGH_SPEED_BOX_X_COORD = 570
+MM_JOG_HIGH_SPEED_BOX_Y_COORD = 540
+MM_JOG_LOW_SPEED_BOX_X_COORD = 742
+MM_JOG_LOW_SPEED_BOX_Y_COORD = 542
+MM_JOG_HOME_RATE_BOX_X_COORD = 900
+MM_JOG_HOME_RATE_BOX_Y_COORD = 540
+MM_JOG_HOME_POSITION_BOX_X_COORD = 1056
+MM_JOG_HOME_POSITION_BOX_Y_COORD = 538
 ONLINE_FILTER_TAB_X_COORD = 374
 ONLINE_FILTER_TAB_Y_COORD = 213
 ONLINE_START_STOP_BTN_X_COORD = 1523
@@ -65,14 +64,14 @@ def get_filters() -> list[dict[str, str]]:
 
 # Machine Management Tab
 def set_jog_high_speed(speed: int) -> None:
-    pyautogui.click(JOG_HIGH_SPEED_BOX_X_COORD, JOG_HIGH_SPEED_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+    pyautogui.click(MM_JOG_HIGH_SPEED_BOX_X_COORD, MM_JOG_HIGH_SPEED_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
     pyautogui.write(str(speed))
     pyautogui.press("enter")
      
         
 # Machine Management Tab
 def set_jog_low_speed(speed: int) -> None:
-    pyautogui.click(JOG_LOW_SPEED_BOX_X_COORD, JOG_LOW_SPEED_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+    pyautogui.click(MM_JOG_LOW_SPEED_BOX_X_COORD, MM_JOG_LOW_SPEED_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
     pyautogui.write(str(speed))
     pyautogui.press("enter")
      
@@ -80,7 +79,7 @@ def set_jog_low_speed(speed: int) -> None:
 # Machine Management Tab
 def set_home_rate(speed: int) -> None:
     try:
-        pyautogui.click(JOG_HOME_RATE_BOX_X_COORD, JOG_HOME_RATE_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+        pyautogui.click(MM_JOG_HOME_RATE_BOX_X_COORD, MM_JOG_HOME_RATE_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
         pyautogui.write(str(speed))
         pyautogui.press("enter")
     except:
@@ -89,7 +88,7 @@ def set_home_rate(speed: int) -> None:
 # Machine Management Tab
 def set_home_position(pos) -> None:
     try:
-        pyautogui.click(JOG_HOME_POSITION_BOX_X_COORD, JOG_HOME_POSITION_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+        pyautogui.click(MM_JOG_HOME_POSITION_BOX_X_COORD, MM_JOG_HOME_POSITION_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
         pyautogui.write(str(pos))
         pyautogui.press("enter")
     except:
