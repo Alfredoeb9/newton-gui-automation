@@ -4,6 +4,8 @@ from pydantic import BaseModel
 import helper_func
 import newton_gui
 
+helper_func.require_admin()
+
 app = FastAPI(
     title = "Newton GUI API",
     description = "API wrapper for Newton GUI automation"
