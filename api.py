@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
+import helper_func
 import newton_gui
 
 app = FastAPI(
@@ -56,11 +57,7 @@ def get_tests():
 @app.post("/tests/select")
 def select_test(selection: TestSelection):
     
-    if not newton_gui.is_newton_running():
-        raise HTTPException(
-            status_code=503,
-            detail="Newton.exe is not running"
-        )
+    helper_func.require_newton_running()
 
     filters = newton_gui.get_filters()
 
@@ -99,11 +96,7 @@ def select_test(selection: TestSelection):
 @app.post("/tests/start")
 def start_test():
 
-    if not newton_gui.is_newton_running():
-        raise HTTPException(
-            status_code=503,
-            detail="Newton.exe is not running"
-        )
+    helper_func.require_newton_running()
 
     try:
         newton_gui.start_test()
@@ -120,11 +113,7 @@ def start_test():
 # POST API to stop current test running
 @app.post("/tests/stop")
 def stop_test():
-    if not newton_gui.is_newton_running():
-        raise HTTPException(
-            status_code=503,
-            detail="Newton.exe is not running"
-        )
+    helper_func.require_newton_running()
 
     try:
         newton_gui.stop_test()
@@ -140,11 +129,7 @@ def stop_test():
 # POST API to pause running test
 @app.post("/tests/pause")
 def pause_test():
-    if not newton_gui.is_newton_running():
-        raise HTTPException(
-            status_code=503,
-            detail="Newton.exe is not running"
-        )
+    helper_func.require_newton_running()
 
     try:
         newton_gui.pause_resume_btn()
@@ -161,11 +146,7 @@ def pause_test():
 # POST API to resume running test
 @app.post("/tests/resume")
 def resume_test():
-    if not newton_gui.is_newton_running():
-        raise HTTPException(
-            status_code=503,
-            detail="Newton.exe is not running"
-        )
+    helper_func.require_newton_running()
 
     try:
         newton_gui.pause_resume_btn()
@@ -183,11 +164,7 @@ def resume_test():
 @app.post("/jog/up/high")
 def jog_up(seconds: float = 1):
     
-    if not newton_gui.is_newton_running():
-        raise HTTPException(
-            status_code=503,
-            detail="Newton.exe is not running"
-        )
+    helper_func.require_newton_running()
 
     if seconds <= 0:
         raise HTTPException(
@@ -218,11 +195,7 @@ def jog_up(seconds: float = 1):
 @app.post("/jog/down/high")
 def jog_down(seconds: float = 1):
     
-    if not newton_gui.is_newton_running():
-        raise HTTPException(
-            status_code=503,
-            detail="Newton.exe is not running"
-        )
+    helper_func.require_newton_running()
 
     if seconds <= 0:
         raise HTTPException(
