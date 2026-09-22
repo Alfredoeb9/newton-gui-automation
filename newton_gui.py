@@ -1,0 +1,174 @@
+import pyautogui
+# from time import time
+import time
+import psutil
+from pathlib import Path
+
+NEWTON_TEST_DIR = Path(
+    r"C:\Users\TRI Test Machine\AppData\Local\Newton\Tests"
+)
+
+JOG_HIGH_SPEED_BOX_X_COORD = 570
+JOG_HIGH_SPEED_BOX_Y_COORD = 540
+JOG_LOW_SPEED_BOX_X_COORD = 742
+JOG_LOW_SPEED_BOX_Y_COORD = 542
+JOG_HOME_RATE_BOX_X_COORD = 900
+JOG_HOME_RATE_BOX_Y_COORD = 540
+JOG_HOME_POSITION_BOX_X_COORD = 1056
+JOG_HOME_POSITION_BOX_Y_COORD = 538
+ONLINE_FILTER_TAB_X_COORD = 374
+ONLINE_FILTER_TAB_Y_COORD = 213
+ONLINE_START_STOP_BTN_X_COORD = 1523
+ONLINE_START_STOP_BTN_Y_COORD = 315
+ONLINE_POS_TARE_BTN_X_COORD = 766
+ONLINE_POS_TARE_BTN_Y_COORD = 315
+ONLINE_LOAD_TARE_BTN_X_COORD = 975
+ONLINE_LOAD_TARE_BTN_Y_COORD = 421
+ONLINE_STRESS_TARE_BTN_X_COORD = 1183
+ONLINE_STRESS_TARE_BTN_Y_COORD = 421
+ONLINE_PAUSE_RESUME_BTN_X_COORD = 1500
+ONLINE_PAUSE_RESUME_BTN_Y_COORD = 367
+HIGHLIGHT_BOX_CLICK = 3
+
+# START_FLAG = False
+# IS_PAUSED = False
+
+def health():
+    print("Testing health ")
+    
+def is_newton_running() -> bool:
+
+    for process in psutil.process_iter(["name"]):
+
+        try:
+            if process.info["name"] == "Newton.exe":
+                return True
+
+        except (
+            psutil.NoSuchProcess,
+            psutil.AccessDenied
+        ):
+            pass
+
+    return False
+
+# GET /tests -> returns available .tst configs
+# POST /tests/select -> JSON: { "name": "Flexure Strength Test-RT 20-40mm"}
+# GUI automation selects/loads that config in Newton
+def get_filters() -> list[dict[str, str]]:
+    filterArray: list[dict[str, str]] = []
+    
+    for filter in NEWTON_TEST_DIR.glob("*.tst"):
+        filterArray.append({"name": filter.stem, "file": filter.name})
+
+    return filterArray
+
+# Machine Management Tab
+def set_jog_high_speed(speed: int) -> None:
+    pyautogui.click(JOG_HIGH_SPEED_BOX_X_COORD, JOG_HIGH_SPEED_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+    pyautogui.write(str(speed))
+    pyautogui.press("enter")
+     
+        
+# Machine Management Tab
+def set_jog_low_speed(speed: int) -> None:
+    pyautogui.click(JOG_LOW_SPEED_BOX_X_COORD, JOG_LOW_SPEED_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+    pyautogui.write(str(speed))
+    pyautogui.press("enter")
+     
+
+# Machine Management Tab
+def set_home_rate(speed: int) -> None:
+    try:
+        pyautogui.click(JOG_HOME_RATE_BOX_X_COORD, JOG_HOME_RATE_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+        pyautogui.write(str(speed))
+        pyautogui.press("enter")
+    except:
+        print("Error setting home_rate on the machine management tab")        
+
+# Machine Management Tab
+def set_home_position(pos) -> None:
+    try:
+        pyautogui.click(JOG_HOME_POSITION_BOX_X_COORD, JOG_HOME_POSITION_BOX_Y_COORD, HIGHLIGHT_BOX_CLICK)
+        pyautogui.write(str(pos))
+        pyautogui.press("enter")
+    except:
+        print("Error setting home_position on the machine management tab")        
+
+# Online Tab
+def clear_pos_tare() -> None:
+    try:
+        pyautogui.click(ONLINE_POS_TARE_BTN_X_COORD, ONLINE_POS_TARE_BTN_Y_COORD)
+        print("Ch:Position has been tared")
+    except:
+        print("Error taring CH:Pos on the online tab")        
+    
+# Online Tab
+def clear_load_tare() -> None:
+    try:
+        pyautogui.click(ONLINE_LOAD_TARE_BTN_X_COORD, ONLINE_LOAD_TARE_BTN_Y_COORD)
+        print("Ch:Load has been tared")
+    except:
+        print("Error taring CH:Load on the online tab")
+        
+# Online Tab
+def clear_stress_tare() -> None:
+    try:
+        pyautogui.click(ONLINE_STRESS_TARE_BTN_X_COORD, ONLINE_STRESS_TARE_BTN_Y_COORD)
+        print("Ch:Stress has been tared")
+    except:
+        print("Error taring CH:Stress on the online tab")       
+    
+# Online Tab
+# Presses the jog up high button for a given amount of seconds
+def jog_up_high(seconds: int) -> None:
+    pyautogui.moveTo(1530, 603)
+    pyautogui.mouseDown(button="left")
+
+    try:
+        time.sleep(seconds)
+    finally:
+        pyautogui.mouseUp(button="left")
+
+# Online Tab
+# Presses the jog down high button for a given amount of seconds
+def jog_down_high(seconds: int) -> None:
+    pyautogui.moveTo(1528, 818)
+    pyautogui.mouseDown(button="left")
+
+    try:
+        time.sleep(seconds)
+    finally:
+        pyautogui.mouseUp(button="left")
+
+def clear_input_field(x: int, y: int) -> None:
+    pyautogui.click(x, y, clicks=3, interval=0.1)
+    pyautogui.press("backspace")
+    
+# Online Tab
+# Places the filter option into the online filter tab
+def set_filter_online_tab(filter_name: str) -> None:
+    clear_input_field(ONLINE_FILTER_TAB_X_COORD, ONLINE_FILTER_TAB_Y_COORD)
+    # pyautogui.click(ONLINE_FILTER_TAB_X_COORD, ONLINE_FILTER_TAB_Y_COORD)
+    pyautogui.write(str(filter_name))
+    pyautogui.press("enter")
+
+        
+# Online Tab
+def start_test() -> None:
+    # if (START_FLAG == False):
+    #     START_FLAG = True
+        print("Starting test ... ")
+        pyautogui.click(ONLINE_START_STOP_BTN_X_COORD, ONLINE_START_STOP_BTN_Y_COORD)
+
+def stop_test() -> None:
+    # if (START_FLAG):
+    #     START_FLAG = False
+        print("Stopping test ... ")
+        pyautogui.click(ONLINE_START_STOP_BTN_X_COORD, ONLINE_START_STOP_BTN_Y_COORD)
+
+# Online Tab
+def pause_resume_btn() -> None:
+    pyautogui.click(ONLINE_PAUSE_RESUME_BTN_X_COORD, ONLINE_PAUSE_RESUME_BTN_Y_COORD)
+
+
