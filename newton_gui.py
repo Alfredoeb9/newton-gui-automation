@@ -66,14 +66,14 @@ def get_filters() -> list[dict[str, str]]:
 
 # Machine Management Tab
 def set_jog_high_speed(speed: int) -> None:
-    pyautogui.click(constants.MM_JOG_HIGH_SPEED_BOX_X_COORD, constants.MM_JOG_HIGH_SPEED_BOX_Y_COORD, constants.HIGHLIGHT_BOX_CLICK)
+    pyautogui.click(*constants.MM_JOG_HIGH_SPEED_BOX, *constants.HIGHLIGHT_BOX_CLICK)
     pyautogui.write(str(speed))
     pyautogui.press("enter")
      
         
 # Machine Management Tab
 def set_jog_low_speed(speed: int) -> None:
-    pyautogui.click(constants.MM_JOG_LOW_SPEED_BOX_X_COORD, constants.MM_JOG_LOW_SPEED_BOX_Y_COORD, constants.HIGHLIGHT_BOX_CLICK)
+    pyautogui.click(*constants.MM_JOG_LOW_SPEED_BOX, constants.HIGHLIGHT_BOX_CLICK)
     pyautogui.write(str(speed))
     pyautogui.press("enter")
      
@@ -81,7 +81,7 @@ def set_jog_low_speed(speed: int) -> None:
 # Machine Management Tab
 def set_home_rate(speed: int) -> None:
     try:
-        pyautogui.click(constants.MM_JOG_HOME_RATE_BOX_X_COORD, constants.MM_JOG_HOME_RATE_BOX_Y_COORD, constants.HIGHLIGHT_BOX_CLICK)
+        pyautogui.click(*constants.MM_JOG_HOME_RATE_BOX, constants.HIGHLIGHT_BOX_CLICK)
         pyautogui.write(str(speed))
         pyautogui.press("enter")
     except:
@@ -90,7 +90,7 @@ def set_home_rate(speed: int) -> None:
 # Machine Management Tab
 def set_home_position(pos) -> None:
     try:
-        pyautogui.click(constants.MM_JOG_HOME_POSITION_BOX_X_COORD, constants.MM_JOG_HOME_POSITION_BOX_Y_COORD, constants.HIGHLIGHT_BOX_CLICK)
+        pyautogui.click(*constants.MM_JOG_HOME_POSITION_BOX, constants.HIGHLIGHT_BOX_CLICK)
         pyautogui.write(str(pos))
         pyautogui.press("enter")
     except:
@@ -99,7 +99,7 @@ def set_home_position(pos) -> None:
 # Online Tab
 def clear_pos_tare() -> None:
     try:
-        pyautogui.click(constants.ONLINE_POS_TARE_BTN_X_COORD, constants.ONLINE_POS_TARE_BTN_Y_COORD)
+        pyautogui.click(*constants.ONLINE_POS_TARE_BTN)
         print("Ch:Position has been tared")
     except:
         print("Error taring CH:Pos on the online tab")        
@@ -107,7 +107,7 @@ def clear_pos_tare() -> None:
 # Online Tab
 def clear_load_tare() -> None:
     try:
-        pyautogui.click(constants.ONLINE_LOAD_TARE_BTN_X_COORD, constants.ONLINE_LOAD_TARE_BTN_Y_COORD)
+        pyautogui.click(*constants.ONLINE_LOAD_TARE_BTN)
         print("Ch:Load has been tared")
     except:
         print("Error taring CH:Load on the online tab")
@@ -115,7 +115,7 @@ def clear_load_tare() -> None:
 # Online Tab
 def clear_stress_tare() -> None:
     try:
-        pyautogui.click(constants.ONLINE_STRESS_TARE_BTN_X_COORD, constants.ONLINE_STRESS_TARE_BTN_Y_COORD)
+        pyautogui.click(*constants.ONLINE_STRESS_TARE_BTN)
         print("Ch:Stress has been tared")
     except:
         print("Error taring CH:Stress on the online tab")       
@@ -123,7 +123,7 @@ def clear_stress_tare() -> None:
 # Online Tab
 # Presses the jog up high button for a given amount of seconds
 def jog_up_high(seconds: int) -> None:
-    pyautogui.moveTo(constants.ONLINE_JOG_UP_HIGH_BTN_X_COORD, constants.ONLINE_JOG_UP_HIGH_BTN_Y_COORD)
+    pyautogui.moveTo(*constants.ONLINE_JOG_UP_HIGH_BTN)
     pyautogui.mouseDown(button="left")
 
     try:
@@ -134,7 +134,7 @@ def jog_up_high(seconds: int) -> None:
 # Online Tab
 # Presses the jog down high button for a given amount of seconds
 def jog_down_high(seconds: int) -> None:
-    pyautogui.moveTo(constants.ONLINE_JOG_DOWN_HIGH_BTN_X_COORD, constants.ONLINE_JOG_DOWN_HIGH_BTN_Y_COORD)
+    pyautogui.moveTo(*constants.ONLINE_JOG_DOWN_HIGH_BTN)
     pyautogui.mouseDown(button="left")
 
     try:
@@ -149,7 +149,7 @@ def clear_input_field(x: int, y: int) -> None:
 # Online Tab
 # Places the filter option into the online filter tab
 def set_filter_online_tab(filter_name: str) -> None:
-    clear_input_field(constants.ONLINE_FILTER_TAB_X_COORD, constants.ONLINE_FILTER_TAB_Y_COORD)
+    clear_input_field(*constants.ONLINE_FILTER_TAB)
     # pyautogui.click(ONLINE_FILTER_TAB_X_COORD, ONLINE_FILTER_TAB_Y_COORD)
     pyautogui.write(str(filter_name))
     pyautogui.press("enter")
@@ -160,16 +160,16 @@ def start_test() -> None:
     # if (START_FLAG == False):
     #     START_FLAG = True
         print("Starting test ... ")
-        pyautogui.click(constants.ONLINE_START_STOP_BTN_X_COORD, constants.ONLINE_START_STOP_BTN_Y_COORD)
+        pyautogui.click(*constants.ONLINE_START_STOP_BTN)
 
 def stop_test() -> None:
     # if (START_FLAG):
     #     START_FLAG = False
         print("Stopping test ... ")
-        pyautogui.click(constants.ONLINE_START_STOP_BTN_X_COORD, constants.ONLINE_START_STOP_BTN_Y_COORD)
+        pyautogui.click(*constants.ONLINE_START_STOP_BTN)
 
 # Online Tab
 def pause_resume_btn() -> None:
-    pyautogui.click(constants.ONLINE_PAUSE_RESUME_BTN_X_COORD, constants.ONLINE_PAUSE_RESUME_BTN_Y_COORD)
+    pyautogui.click(*constants.ONLINE_PAUSE_RESUME_BTN)
 
 
