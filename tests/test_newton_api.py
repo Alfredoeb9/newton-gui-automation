@@ -23,7 +23,7 @@ def test_get_filters():
     ]
 
     with patch(
-        "newton_gui.NEWTON_TEST_DIR"
+        "newton_gui.constants.NEWTON_TEST_DIR"
     ) as mock_test_dir:
 
         mock_test_dir.glob.return_value = fake_tests

@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 import helper_func
 import newton_gui
+from constants import ( MAX_JOG_SECONDS )
 
 helper_func.require_admin()
 
@@ -10,8 +11,6 @@ app = FastAPI(
     title = "Newton GUI API",
     description = "API wrapper for Newton GUI automation"
 )
-
-MAX_JOG_SECONDS = 10
 
 class TestSelection(BaseModel):
     name: str

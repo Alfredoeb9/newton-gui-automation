@@ -34,8 +34,8 @@ def test_start_btn():
         newton_gui.start_test()
 
         mock_pyautogui.click.assert_called_once_with(
-            newton_gui.ONLINE_START_STOP_BTN_X_COORD,
-            newton_gui.ONLINE_START_STOP_BTN_Y_COORD
+            newton_gui.constants.ONLINE_START_STOP_BTN_X_COORD,
+            newton_gui.constants.ONLINE_START_STOP_BTN_Y_COORD
         )
 
 def test_jog_up_high():
