@@ -27,7 +27,6 @@ def test_newton_is_not_running():
         assert newton_gui.is_newton_running() is False
         
 def test_start_btn():
-    helper_func.activate_newton()
     
     with patch("newton_gui.pyautogui") as mock_pyautogui:
 
@@ -38,7 +37,6 @@ def test_start_btn():
         )
 
 def test_jog_up_high():
-    helper_func.activate_newton()
     
     with patch("newton_gui.pyautogui") as mock_pyautogui:
         with patch("newton_gui.time.sleep"):
@@ -56,25 +54,27 @@ def test_jog_up_high():
             )
             
 def test_jog_up_releases_mouse_on_error():
-    helper_func.activate_newton()
     
-    with patch("newton_gui.pyautogui") as mock_pyautogui:
-        with patch(
-            "newton_gui.time.sleep",
-            side_effect=RuntimeError("test error")
-        ):
+    with patch("newton_gui.helper_func.activate_newton"):
+        with patch("newton_gui.helper_func.activate_tab"):
 
-            try:
-                newton_gui.jog_up_high(2)
-            except RuntimeError:
-                pass
+            with patch("newton_gui.pyautogui") as mock_pyautogui:
 
-            mock_pyautogui.mouseUp.assert_called_once_with(
-                button="left"
-            )
+                with patch(
+                    "newton_gui.time.sleep",
+                    side_effect=RuntimeError("test error")
+                ):
+
+                    try:
+                        newton_gui.jog_up_high(2)
+                    except RuntimeError:
+                        pass
+
+                    mock_pyautogui.mouseUp.assert_called_once_with(
+                        button="left"
+                    )
             
 def test_jog_down_high():
-    helper_func.activate_newton()
     
     with patch("newton_gui.pyautogui") as mock_pyautogui:
         with patch("newton_gui.time.sleep"):
@@ -92,17 +92,21 @@ def test_jog_down_high():
             )
 
 def test_jog_down_releases_mouse_on_error():
-    helper_func.activate_newton()
-    with patch("newton_gui.pyautogui") as mock_pyautogui:
-        with patch(
-            "newton_gui.time.sleep",
-            side_effect=RuntimeError("test error")
-        ):
-            try:
-                newton_gui.jog_down_high(2)
-            except RuntimeError:
-                pass
-            
-            mock_pyautogui.mouseUp.assert_called_once_with(
-                button="left"
-            )
+    with patch("newton_gui.helper_func.activate_newton"):
+        with patch("newton_gui.helper_func.activate_tab"):
+
+            with patch("newton_gui.pyautogui") as mock_pyautogui:
+
+                with patch(
+                    "newton_gui.time.sleep",
+                    side_effect=RuntimeError("test error")
+                ):
+
+                    try:
+                        newton_gui.jog_down_high(2)
+                    except RuntimeError:
+                        pass
+
+                    mock_pyautogui.mouseUp.assert_called_once_with(
+                        button="left"
+                    )
