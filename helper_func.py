@@ -1,5 +1,7 @@
 import psutil
 import ctypes
+import pyautogui
+import constants
 from fastapi import HTTPException
 from pywinauto import Desktop
 
@@ -45,3 +47,9 @@ def activate_newton() -> None:
             pass
 
     raise RuntimeError("Newton window not found")
+
+def activate_tab(tab_name: str) -> None:
+    coordinates = getattr(constants, tab_name)
+    print(f"{coordinates[1]}")
+    pyautogui.click(coordinates)
+    
