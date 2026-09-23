@@ -3,6 +3,7 @@ import time
 import psutil
 from pathlib import Path
 import constants
+import helper_func
 
 # NEWTON_TEST_DIR = Path(
 #     r"C:\Users\TRI Test Machine\AppData\Local\Newton\Tests"
@@ -66,6 +67,9 @@ def get_filters() -> list[dict[str, str]]:
 
 # Machine Management Tab
 def set_jog_high_speed(speed: int) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("MM_MAIN_TAB")
+    
     pyautogui.click(*constants.MM_JOG_HIGH_SPEED_BOX, *constants.HIGHLIGHT_BOX_CLICK)
     pyautogui.write(str(speed))
     pyautogui.press("enter")
@@ -73,6 +77,9 @@ def set_jog_high_speed(speed: int) -> None:
         
 # Machine Management Tab
 def set_jog_low_speed(speed: int) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("MM_MAIN_TAB")
+    
     pyautogui.click(*constants.MM_JOG_LOW_SPEED_BOX, constants.HIGHLIGHT_BOX_CLICK)
     pyautogui.write(str(speed))
     pyautogui.press("enter")
@@ -80,6 +87,9 @@ def set_jog_low_speed(speed: int) -> None:
 
 # Machine Management Tab
 def set_home_rate(speed: int) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("MM_MAIN_TAB")
+    
     try:
         pyautogui.click(*constants.MM_JOG_HOME_RATE_BOX, constants.HIGHLIGHT_BOX_CLICK)
         pyautogui.write(str(speed))
@@ -89,6 +99,9 @@ def set_home_rate(speed: int) -> None:
 
 # Machine Management Tab
 def set_home_position(pos) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("MM_MAIN_TAB")
+    
     try:
         pyautogui.click(*constants.MM_JOG_HOME_POSITION_BOX, constants.HIGHLIGHT_BOX_CLICK)
         pyautogui.write(str(pos))
@@ -98,6 +111,9 @@ def set_home_position(pos) -> None:
 
 # Online Tab
 def clear_pos_tare() -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
     try:
         pyautogui.click(*constants.ONLINE_POS_TARE_BTN)
         print("Ch:Position has been tared")
@@ -106,6 +122,9 @@ def clear_pos_tare() -> None:
     
 # Online Tab
 def clear_load_tare() -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
     try:
         pyautogui.click(*constants.ONLINE_LOAD_TARE_BTN)
         print("Ch:Load has been tared")
@@ -114,6 +133,9 @@ def clear_load_tare() -> None:
         
 # Online Tab
 def clear_stress_tare() -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
     try:
         pyautogui.click(*constants.ONLINE_STRESS_TARE_BTN)
         print("Ch:Stress has been tared")
@@ -123,6 +145,9 @@ def clear_stress_tare() -> None:
 # Online Tab
 # Presses the jog up high button for a given amount of seconds
 def jog_up_high(seconds: int) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
     pyautogui.moveTo(*constants.ONLINE_JOG_UP_HIGH_BTN)
     pyautogui.mouseDown(button="left")
 
@@ -134,6 +159,9 @@ def jog_up_high(seconds: int) -> None:
 # Online Tab
 # Presses the jog down high button for a given amount of seconds
 def jog_down_high(seconds: int) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
     pyautogui.moveTo(*constants.ONLINE_JOG_DOWN_HIGH_BTN)
     pyautogui.mouseDown(button="left")
 
@@ -142,34 +170,46 @@ def jog_down_high(seconds: int) -> None:
     finally:
         pyautogui.mouseUp(button="left")
 
-def clear_input_field(x: int, y: int) -> None:
+def clear_input_field(x: int, y: int, main_tab: str) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab(str(main_tab))
+    
     pyautogui.click(x, y, clicks=3, interval=0.1)
     pyautogui.press("backspace")
     
 # Online Tab
 # Places the filter option into the online filter tab
 def set_filter_online_tab(filter_name: str) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
     clear_input_field(*constants.ONLINE_FILTER_TAB)
-    # pyautogui.click(ONLINE_FILTER_TAB_X_COORD, ONLINE_FILTER_TAB_Y_COORD)
+    
     pyautogui.write(str(filter_name))
     pyautogui.press("enter")
 
         
 # Online Tab
 def start_test() -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
     # if (START_FLAG == False):
     #     START_FLAG = True
-        print("Starting test ... ")
-        pyautogui.click(*constants.ONLINE_START_STOP_BTN)
+    print("Starting test ... ")
+    pyautogui.click(*constants.ONLINE_START_STOP_BTN)
 
 def stop_test() -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
     # if (START_FLAG):
     #     START_FLAG = False
-        print("Stopping test ... ")
-        pyautogui.click(*constants.ONLINE_START_STOP_BTN)
+    print("Stopping test ... ")
+    pyautogui.click(*constants.ONLINE_START_STOP_BTN)
 
 # Online Tab
 def pause_resume_btn() -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
     pyautogui.click(*constants.ONLINE_PAUSE_RESUME_BTN)
 
 

@@ -19,6 +19,7 @@ class TestSelection(BaseModel):
 @app.get("/health")
 def health():
     newton_running = newton_gui.is_newton_running()
+    helper_func.activate_newton()
     
     if not newton_running:
         return {
@@ -59,6 +60,7 @@ def get_tests():
 def select_test(selection: TestSelection):
     
     helper_func.require_newton_running()
+    helper_func.activate_newton()
 
     filters = newton_gui.get_filters()
 
@@ -98,6 +100,7 @@ def select_test(selection: TestSelection):
 def start_test():
 
     helper_func.require_newton_running()
+    helper_func.activate_newton()
 
     try:
         newton_gui.start_test()
@@ -115,6 +118,7 @@ def start_test():
 @app.post("/tests/stop")
 def stop_test():
     helper_func.require_newton_running()
+    helper_func.activate_newton()
 
     try:
         newton_gui.stop_test()
@@ -131,6 +135,7 @@ def stop_test():
 @app.post("/tests/pause")
 def pause_test():
     helper_func.require_newton_running()
+    helper_func.activate_newton()
 
     try:
         newton_gui.pause_resume_btn()
@@ -148,6 +153,7 @@ def pause_test():
 @app.post("/tests/resume")
 def resume_test():
     helper_func.require_newton_running()
+    helper_func.activate_newton()
 
     try:
         newton_gui.pause_resume_btn()
@@ -166,7 +172,7 @@ def resume_test():
 def jog_up(seconds: float = 1):
     
     helper_func.require_newton_running()
-
+    
     if seconds <= 0:
         raise HTTPException(
             status_code=400,
@@ -197,7 +203,7 @@ def jog_up(seconds: float = 1):
 def jog_down(seconds: float = 1):
     
     helper_func.require_newton_running()
-
+    
     if seconds <= 0:
         raise HTTPException(
             status_code=400,
