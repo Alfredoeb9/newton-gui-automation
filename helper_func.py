@@ -4,7 +4,6 @@ import pyautogui
 import constants
 from fastapi import HTTPException
 from pywinauto import Desktop
-
 import newton_gui
 
 def require_admin() -> None:
@@ -50,6 +49,5 @@ def activate_newton() -> None:
 
 def activate_tab(tab_name: str) -> None:
     coordinates = getattr(constants, tab_name)
-    print(f"{coordinates[1]}")
     pyautogui.click(coordinates)
     

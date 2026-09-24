@@ -170,9 +170,26 @@ def jog_down_high(seconds: int) -> None:
     finally:
         pyautogui.mouseUp(button="left")
 
-def clear_input_field(x: int, y: int, main_tab: str) -> None:
+    
+def clear_input_field(x: int, y: int, main_tab: str | None = None) -> None:
+    """Clicks on input field box and clears any characters
+        
+    Parameters
+    ----------
+    x: int
+        The x coordinate of mouse when hovered over box
+    y: int
+        The y coordinate of mouse when hovered over box
+        
+    Returns
+    -------
+    None
+    """
+    
     helper_func.activate_newton()
-    helper_func.activate_tab(str(main_tab))
+    
+    if main_tab is not None:
+        helper_func.activate_tab(str(main_tab))
     
     pyautogui.click(x, y, clicks=3, interval=0.1)
     pyautogui.press("backspace")
