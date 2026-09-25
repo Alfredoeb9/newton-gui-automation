@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 import helper_func
 import newton_gui
+import ocr
 from constants import ( MAX_JOG_SECONDS )
 
 helper_func.require_admin()
@@ -222,3 +223,7 @@ def jog_down(seconds: float = 1):
         "status": "jogged down",
         "seconds": seconds
     }
+    
+@app.get('/data')
+def get_data():
+    return ocr.read_newton_values()
