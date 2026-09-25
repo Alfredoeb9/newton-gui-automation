@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock, patch
 import newton_gui
-import helper_func
 
 #TODO: Move the activate_newton() to one function to activate the window once
 # then run all the tests
