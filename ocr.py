@@ -42,10 +42,20 @@ def read_newton_values() -> dict[str, str]:
         constants.ONLINE_STRAIN_VALUE_TOP_LEFT,
         constants.ONLINE_STRAIN_VALUE_BOTTOM_RIGHT
     )
+    
+    strain_rate = read_value(
+        constants.ONLINE_STRAIN_RATE_VALUE_TOP_LEFT,
+        constants.ONLINE_STRAIN_RATE_VALUE_BOTTOM_RIGHT
+    )
 
     position = read_value(
         constants.ONLINE_POS_VALUE_TOP_LEFT,
         constants.ONLINE_POS_VALUE_BOTTOM_RIGHT
+    )
+    
+    position_rate = read_value(
+        constants.ONLINE_POS_RATE_VALUE_TOP_LEFT,
+        constants.ONLINE_POS_RATE_VALUE_BOTTOM_RIGHT
     )
 
     load = read_value(
@@ -53,11 +63,19 @@ def read_newton_values() -> dict[str, str]:
         constants.ONLINE_LOAD_VALUE_BOTTOM_RIGHT
     )
     
+    load_rate = read_value(
+        constants.ONLINE_LOAD_RATE_VALUE_TOP_LEFT,
+        constants.ONLINE_LOAD_RATE_VALUE_BOTTOM_RIGHT
+    )
+    
     # Formatted data to send to use
     data = {
         "strain": strain + " in",
+        "strain_rate": strain_rate + " in/min",
         "position": position + " mm",
-        "load": load + " N"
+        "position_rate": position_rate + " mm/min",
+        "load": load + " N",
+        "load_rate": load_rate + " N/min"
     }
     
     # Save the txt file into a logger file (Desktop/Newton/Online_Values/newton_data.txt)
@@ -71,5 +89,8 @@ if __name__ == "__main__":
     values = read_newton_values()
 
     print("Strain:", values["strain"])
+    print("Strain_rate:", values["strain_rate"])
     print("Position:", values["position"])
+    print("Position_rate:", values["position_rate"])
     print("Load:", values["load"])
+    print("Load_rate:", values["load_rate"])
