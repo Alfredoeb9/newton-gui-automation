@@ -3,7 +3,7 @@ import pyautogui
 import data_logger
 from PIL import Image
 import constants
-from helper_func import activate_newton
+from helper_func import activate_newton, buildDataObject
 
 # tessearact executable file
 pytesseract.pytesseract.tesseract_cmd = (
@@ -35,81 +35,112 @@ def read_value(top_left: tuple[int, int], bottom_right: tuple[int, int]) -> str:
     ).strip()
     
 # Main action to capture screenshot and read values from screenshot
-def read_newton_values() -> dict[str, str]:
+def read_newton_values(query: str | None = None) -> dict[str, str]:
     activate_newton()
     
-    strain = read_value(
-        constants.ONLINE_STRAIN_VALUE_TOP_LEFT,
-        constants.ONLINE_STRAIN_VALUE_BOTTOM_RIGHT
-    )
-    
-    strain_rate = read_value(
-        constants.ONLINE_STRAIN_RATE_VALUE_TOP_LEFT,
-        constants.ONLINE_STRAIN_RATE_VALUE_BOTTOM_RIGHT
-    )
+    values = {}
 
-    position = read_value(
-        constants.ONLINE_POS_VALUE_TOP_LEFT,
-        constants.ONLINE_POS_VALUE_BOTTOM_RIGHT
-    )
-    
-    position_rate = read_value(
-        constants.ONLINE_POS_RATE_VALUE_TOP_LEFT,
-        constants.ONLINE_POS_RATE_VALUE_BOTTOM_RIGHT
-    )
+    if query == "all":
+        values["strain"] = read_value(
+            constants.ONLINE_STRAIN_VALUE_TOP_LEFT,
+            constants.ONLINE_STRAIN_VALUE_BOTTOM_RIGHT
+        )
 
-    load = read_value(
-        constants.ONLINE_LOAD_VALUE_TOP_LEFT,
-        constants.ONLINE_LOAD_VALUE_BOTTOM_RIGHT
-    )
-    
-    load_rate = read_value(
-        constants.ONLINE_LOAD_RATE_VALUE_TOP_LEFT,
-        constants.ONLINE_LOAD_RATE_VALUE_BOTTOM_RIGHT
-    )
-    
-    values = {
-        "strain": strain,
-        "strain_rate": strain_rate,
-        "position": position,
-        "position_rate": position_rate,
-        "load": load,
-        "load_rate": load_rate
-    }
-    
+        values["strain_rate"] = read_value(
+            constants.ONLINE_STRAIN_RATE_VALUE_TOP_LEFT,
+            constants.ONLINE_STRAIN_RATE_VALUE_BOTTOM_RIGHT
+        )
+
+        values["strain_MAX"] = read_value(
+            constants.ONLINE_STRAIN_MAX_VALUE_TOP_LEFT,
+            constants.ONLINE_STRAIN_MAX_VALUE_BOTTOM_RIGHT
+        )
+
+        values["position"] = read_value(
+            constants.ONLINE_POS_VALUE_TOP_LEFT,
+            constants.ONLINE_POS_VALUE_BOTTOM_RIGHT
+        )
+
+        values["position_rate"] = read_value(
+            constants.ONLINE_POS_RATE_VALUE_TOP_LEFT,
+            constants.ONLINE_POS_RATE_VALUE_BOTTOM_RIGHT
+        )
+
+        values["position_MAX"] = read_value(
+            constants.ONLINE_POS_MAX_VALUE_TOP_LEFT,
+            constants.ONLINE_POS_MAX_VALUE_BOTTOM_RIGHT
+        )
+
+        values["load"] = read_value(
+            constants.ONLINE_LOAD_VALUE_TOP_LEFT,
+            constants.ONLINE_LOAD_VALUE_BOTTOM_RIGHT
+        )
+
+        values["load_rate"] = read_value(
+            constants.ONLINE_LOAD_RATE_VALUE_TOP_LEFT,
+            constants.ONLINE_LOAD_RATE_VALUE_BOTTOM_RIGHT
+        )
+
+        values["load_MAX"] = read_value(
+            constants.ONLINE_LOAD_MAX_VALUE_TOP_LEFT,
+            constants.ONLINE_LOAD_MAX_VALUE_BOTTOM_RIGHT
+        )
+
+    elif query == "rate":
+
+        values["strain_rate"] = read_value(
+            constants.ONLINE_STRAIN_RATE_VALUE_TOP_LEFT,
+            constants.ONLINE_STRAIN_RATE_VALUE_BOTTOM_RIGHT
+        )
+
+        values["position_rate"] = read_value(
+            constants.ONLINE_POS_RATE_VALUE_TOP_LEFT,
+            constants.ONLINE_POS_RATE_VALUE_BOTTOM_RIGHT
+        )
+
+        values["load_rate"] = read_value(
+            constants.ONLINE_LOAD_RATE_VALUE_TOP_LEFT,
+            constants.ONLINE_LOAD_RATE_VALUE_BOTTOM_RIGHT
+        )
+
+    elif query == "max":
+
+        values["strain_MAX"] = read_value(
+            constants.ONLINE_STRAIN_MAX_VALUE_TOP_LEFT,
+            constants.ONLINE_STRAIN_MAX_VALUE_BOTTOM_RIGHT
+        )
+
+        values["position_MAX"] = read_value(
+            constants.ONLINE_POS_MAX_VALUE_TOP_LEFT,
+            constants.ONLINE_POS_MAX_VALUE_BOTTOM_RIGHT
+        )
+
+        values["load_MAX"] = read_value(
+            constants.ONLINE_LOAD_MAX_VALUE_TOP_LEFT,
+            constants.ONLINE_LOAD_MAX_VALUE_BOTTOM_RIGHT
+        )
+
+    else:
+        raise ValueError(
+            "Invalid query. Use 'all', 'rate', or 'max'."
+        )
+
     # Check for empty OCR values
     missing_values = []
-    
+
     for name, value in values.items():
+
         if not value:
             missing_values.append(name)
-            
+
     if len(missing_values) > 0:
-        raise RuntimeError(f"OCR failed to read: {', '.join(missing_values)}")
+        raise RuntimeError(
+            f"OCR failed to read: {', '.join(missing_values)}"
+        )
     
-    # Formatted data to send to use
-    data = {
-        "strain": strain + " in",
-        "strain_rate": strain_rate + " in/min",
-        "position": position + " mm",
-        "position_rate": position_rate + " mm/min",
-        "load": load + " N",
-        "load_rate": load_rate + " N/min"
-    }
+    data = buildDataObject(values)
     
     # Save the txt file into a logger file (Desktop/Newton/Online_Values/newton_data.txt)
-    data_logger.save_reading(data)
+    data_logger.save_reading(data, query)
 
     return data
-
-# If we need to run this file separately
-if __name__ == "__main__":
-
-    values = read_newton_values()
-
-    print("Strain:", values["strain"])
-    print("Strain_rate:", values["strain_rate"])
-    print("Position:", values["position"])
-    print("Position_rate:", values["position_rate"])
-    print("Load:", values["load"])
-    print("Load_rate:", values["load_rate"])

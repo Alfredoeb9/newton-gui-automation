@@ -5,6 +5,7 @@ import constants
 from fastapi import HTTPException
 from pywinauto import Desktop
 import newton_gui
+import data_logger
 
 def require_admin() -> None:
     if not ctypes.windll.shell32.IsUserAnAdmin():
@@ -51,3 +52,34 @@ def activate_tab(tab_name: str) -> None:
     coordinates = getattr(constants, tab_name)
     pyautogui.click(coordinates)
     
+def buildDataObject(values: dict[str, str]) -> dict[str, str]:
+    data = {}
+
+    if "strain" in values:
+        data["strain"] = values["strain"] + " in"
+
+    if "strain_rate" in values:
+        data["strain_rate"] = values["strain_rate"] + " in/min"
+
+    if "strain_MAX" in values:
+        data["strain_MAX"] = values["strain_MAX"] + " in"
+
+    if "position" in values:
+        data["position"] = values["position"] + " mm"
+
+    if "position_rate" in values:
+        data["position_rate"] = values["position_rate"] + " mm/min"
+
+    if "position_MAX" in values:
+        data["position_MAX"] = values["position_MAX"] + " mm"
+
+    if "load" in values:
+        data["load"] = values["load"] + " N"
+
+    if "load_rate" in values:
+        data["load_rate"] = values["load_rate"] + " N/min"
+
+    if "load_MAX" in values:
+        data["load_MAX"] = values["load_MAX"] + " N"
+
+    return data

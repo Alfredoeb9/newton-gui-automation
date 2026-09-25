@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException
+from typing import Literal
+from fastapi import Query
 from pydantic import BaseModel
 
 import helper_func
@@ -225,12 +227,21 @@ def jog_down(seconds: float = 1):
     }
     
 @app.get('/data')
-def get_data():
+def get_data(
+    query: Literal["all", "max", "rate"] = Query(
+        description=(
+            """Select the Newton data to retrieve. \n
+            'all' = current, rate, and maximum values. \n
+            'rate' = strain, position, and load rates. \n
+            'max' = maximum strain, position, and load values."""
+        )
+    )
+):
     
     helper_func.require_newton_running()
     
     try:
-        data = ocr.read_newton_values()
+        data = ocr.read_newton_values(query)
     
     except HTTPException:
         raise
