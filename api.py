@@ -226,4 +226,22 @@ def jog_down(seconds: float = 1):
     
 @app.get('/data')
 def get_data():
-    return ocr.read_newton_values()
+    
+    helper_func.require_newton_running()
+    
+    try:
+        data = ocr.read_newton_values()
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to read Newton data: {e}"
+        )
+        
+    return {
+        "status": "success",
+        "data": data
+    }

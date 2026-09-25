@@ -68,6 +68,25 @@ def read_newton_values() -> dict[str, str]:
         constants.ONLINE_LOAD_RATE_VALUE_BOTTOM_RIGHT
     )
     
+    values = {
+        "strain": strain,
+        "strain_rate": strain_rate,
+        "position": position,
+        "position_rate": position_rate,
+        "load": load,
+        "load_rate": load_rate
+    }
+    
+    # Check for empty OCR values
+    missing_values = []
+    
+    for name, value in values.items():
+        if not value:
+            missing_values.append(name)
+            
+    if len(missing_values) > 0:
+        raise RuntimeError(f"OCR failed to read: {', '.join(missing_values)}")
+    
     # Formatted data to send to use
     data = {
         "strain": strain + " in",
