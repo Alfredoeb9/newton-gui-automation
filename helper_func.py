@@ -61,8 +61,8 @@ def buildDataObject(values: dict[str, str]) -> dict[str, str]:
     if "strain_rate" in values:
         data["strain_rate"] = values["strain_rate"] + " in/min"
 
-    if "strain_MAX" in values:
-        data["strain_MAX"] = values["strain_MAX"] + " in"
+    if "strain_max" in values:
+        data["strain_max"] = values["strain_max"] + " in"
 
     if "position" in values:
         data["position"] = values["position"] + " mm"
@@ -70,8 +70,8 @@ def buildDataObject(values: dict[str, str]) -> dict[str, str]:
     if "position_rate" in values:
         data["position_rate"] = values["position_rate"] + " mm/min"
 
-    if "position_MAX" in values:
-        data["position_MAX"] = values["position_MAX"] + " mm"
+    if "position_max" in values:
+        data["position_max"] = values["position_max"] + " mm"
 
     if "load" in values:
         data["load"] = values["load"] + " N"
@@ -79,7 +79,7 @@ def buildDataObject(values: dict[str, str]) -> dict[str, str]:
     if "load_rate" in values:
         data["load_rate"] = values["load_rate"] + " N/min"
 
-    if "load_MAX" in values:
-        data["load_MAX"] = values["load_MAX"] + " N"
+    if "load_max" in values:
+        data["load_max"] = values["load_max"] + " N"
 
     return data

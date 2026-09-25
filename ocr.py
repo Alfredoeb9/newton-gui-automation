@@ -51,7 +51,7 @@ def read_newton_values(query: str | None = None) -> dict[str, str]:
             constants.ONLINE_STRAIN_RATE_VALUE_BOTTOM_RIGHT
         )
 
-        values["strain_MAX"] = read_value(
+        values["strain_max"] = read_value(
             constants.ONLINE_STRAIN_MAX_VALUE_TOP_LEFT,
             constants.ONLINE_STRAIN_MAX_VALUE_BOTTOM_RIGHT
         )
@@ -66,7 +66,7 @@ def read_newton_values(query: str | None = None) -> dict[str, str]:
             constants.ONLINE_POS_RATE_VALUE_BOTTOM_RIGHT
         )
 
-        values["position_MAX"] = read_value(
+        values["position_max"] = read_value(
             constants.ONLINE_POS_MAX_VALUE_TOP_LEFT,
             constants.ONLINE_POS_MAX_VALUE_BOTTOM_RIGHT
         )
@@ -81,7 +81,7 @@ def read_newton_values(query: str | None = None) -> dict[str, str]:
             constants.ONLINE_LOAD_RATE_VALUE_BOTTOM_RIGHT
         )
 
-        values["load_MAX"] = read_value(
+        values["load_max"] = read_value(
             constants.ONLINE_LOAD_MAX_VALUE_TOP_LEFT,
             constants.ONLINE_LOAD_MAX_VALUE_BOTTOM_RIGHT
         )
@@ -105,17 +105,17 @@ def read_newton_values(query: str | None = None) -> dict[str, str]:
 
     elif query == "max":
 
-        values["strain_MAX"] = read_value(
+        values["strain_max"] = read_value(
             constants.ONLINE_STRAIN_MAX_VALUE_TOP_LEFT,
             constants.ONLINE_STRAIN_MAX_VALUE_BOTTOM_RIGHT
         )
 
-        values["position_MAX"] = read_value(
+        values["position_max"] = read_value(
             constants.ONLINE_POS_MAX_VALUE_TOP_LEFT,
             constants.ONLINE_POS_MAX_VALUE_BOTTOM_RIGHT
         )
 
-        values["load_MAX"] = read_value(
+        values["load_max"] = read_value(
             constants.ONLINE_LOAD_MAX_VALUE_TOP_LEFT,
             constants.ONLINE_LOAD_MAX_VALUE_BOTTOM_RIGHT
         )

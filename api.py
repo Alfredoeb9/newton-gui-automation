@@ -54,12 +54,25 @@ def health():
     }
 
 # GET API to send user list of test filters
-@app.get("/tests")
+@app.get(
+    "/tests",
+    summary="Get a List of Filter Tests",
+    description=(
+        """Gets all created filter tests in which you can then use the /tests/select to prepare this test to run"""
+    )
+)
 def get_tests():
     return newton_gui.get_filters()
 
 # POST API to paste selected test filter
-@app.post("/tests/select")
+@app.post(
+    "/tests/select",
+    summary="Select a Newton test",
+    description=(
+        """Selects a test configuration from the available Newton test filters
+        and enters the selected test name into the Online test filter field."""
+    )
+)
 def select_test(selection: TestSelection):
     
     helper_func.require_newton_running()
@@ -226,7 +239,15 @@ def jog_down(seconds: float = 1):
         "seconds": seconds
     }
     
-@app.get('/data')
+@app.get(
+    "/data",
+    summary="Read Newton test data",
+    description=(
+        """Reads live values from the Newton GUI using OCR.
+         
+        Query must be one of: 'all', 'rate', or 'max'."""
+    )
+)
 def get_data(
     query: Literal["all", "max", "rate"] = Query(
         description=(
