@@ -40,7 +40,7 @@ def test_jog_up_high():
     with patch("newton_gui.pyautogui") as mock_pyautogui:
         with patch("newton_gui.time.sleep"):
 
-            newton_gui.jog_up_high(2)
+            newton_gui.jog_up_fast(2)
 
             mock_pyautogui.moveTo.assert_called_once_with(1530, 603)
 
@@ -65,7 +65,7 @@ def test_jog_up_releases_mouse_on_error():
                 ):
 
                     try:
-                        newton_gui.jog_up_high(2)
+                        newton_gui.jog_up_fast(2)
                     except RuntimeError:
                         pass
 
@@ -73,12 +73,12 @@ def test_jog_up_releases_mouse_on_error():
                         button="left"
                     )
             
-def test_jog_down_high():
+def test_jog_down_fast():
     
     with patch("newton_gui.pyautogui") as mock_pyautogui:
         with patch("newton_gui.time.sleep"):
         
-            newton_gui.jog_down_high(2)
+            newton_gui.jog_down_fast(2)
 
             mock_pyautogui.moveTo.assert_called_once_with(1528, 818)
 
@@ -102,7 +102,7 @@ def test_jog_down_releases_mouse_on_error():
                 ):
 
                     try:
-                        newton_gui.jog_down_high(2)
+                        newton_gui.jog_down_fast(2)
                     except RuntimeError:
                         pass
 

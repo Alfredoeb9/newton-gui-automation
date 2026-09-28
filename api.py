@@ -184,8 +184,8 @@ def resume_test():
     }
 
 # POST API to run jog up high button
-@app.post("/jog/up/high")
-def jog_up(seconds: float = 1):
+@app.post("/jog/up/fast")
+def jog_up_fast(seconds: float = 1):
     
     helper_func.require_newton_running()
     
@@ -202,7 +202,7 @@ def jog_up(seconds: float = 1):
         )
         
     try:
-        newton_gui.jog_up_high(seconds)
+        newton_gui.jog_up_fast(seconds)
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -210,13 +210,44 @@ def jog_up(seconds: float = 1):
         )
 
     return {
-        "status": "jogged up",
+        "status": "jogged up high",
+        "seconds": seconds
+    }
+    
+# POST API to run jog up high button
+@app.post("/jog/up/slow")
+def jog_up_slow(seconds: float = 1):
+    
+    helper_func.require_newton_running()
+    
+    if seconds <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="seconds must be greater than 0"
+        )
+        
+    if seconds > MAX_JOG_SECONDS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"seconds cannot exceed {MAX_JOG_SECONDS}"
+        )
+        
+    try:
+        newton_gui.jog_up_slow(seconds)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to jog up low: {e}"
+        )
+
+    return {
+        "status": "jogged up low",
         "seconds": seconds
     }
 
 # POST API to run jog down high button
-@app.post("/jog/down/high")
-def jog_down(seconds: float = 1):
+@app.post("/jog/down/fast")
+def jog_down_fast(seconds: float = 1):
     
     helper_func.require_newton_running()
     
@@ -227,7 +258,7 @@ def jog_down(seconds: float = 1):
         )
 
     try:
-        newton_gui.jog_down_high(seconds)
+        newton_gui.jog_down_fast(seconds)
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -235,7 +266,32 @@ def jog_down(seconds: float = 1):
         )
         
     return {
-        "status": "jogged down",
+        "status": "jogged down fast",
+        "seconds": seconds
+    }
+    
+    # POST API to run jog down high button
+@app.post("/jog/down/slow")
+def jog_down_slow(seconds: float = 1):
+    
+    helper_func.require_newton_running()
+    
+    if seconds <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="seconds must be greater than 0"
+        )
+
+    try:
+        newton_gui.jog_down_slow(seconds)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to jog down low: {e}"
+        )
+        
+    return {
+        "status": "jogged down slow",
         "seconds": seconds
     }
     

@@ -83,21 +83,21 @@ def test_select_nonexistent_test():
         
 def test_jog_up_rejects_long_duration():
     response = client.post(
-        "/jog/up/high?seconds=100"
+        "/jog/up/fast?seconds=100"
     )
 
     assert response.status_code == 400
     
 def test_jog_up_rejects_zero():
     response = client.post(
-        "/jog/up/high?seconds=0"
+        "/jog/up/fast?seconds=0"
     )
 
     assert response.status_code == 400
     
 def test_jog_up_rejects_negative():
     response = client.post(
-        "/jog/up/high?seconds=-1"
+        "/jog/up/fast?seconds=-1"
     )
 
     assert response.status_code == 400

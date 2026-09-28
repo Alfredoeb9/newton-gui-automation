@@ -114,11 +114,25 @@ def clear_stress_tare() -> None:
     
 # Online Tab
 # Presses the jog up high button for a given amount of seconds
-def jog_up_high(seconds: int) -> None:
+def jog_up_fast(seconds: int) -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("ONLINE_MAIN_TAB")
     
-    pyautogui.moveTo(*constants.ONLINE_JOG_UP_HIGH_BTN)
+    pyautogui.moveTo(*constants.ONLINE_JOG_UP_FAST_BTN)
+    pyautogui.mouseDown(button="left")
+
+    try:
+        time.sleep(seconds)
+    finally:
+        pyautogui.mouseUp(button="left")
+        
+# Online Tab
+# Presses the jog up low button for a given amount of seconds
+def jog_up_slow(seconds: int) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
+    pyautogui.moveTo(*constants.ONLINE_JOG_UP_SLOW_BTN)
     pyautogui.mouseDown(button="left")
 
     try:
@@ -128,11 +142,25 @@ def jog_up_high(seconds: int) -> None:
 
 # Online Tab
 # Presses the jog down high button for a given amount of seconds
-def jog_down_high(seconds: int) -> None:
+def jog_down_fast(seconds: int) -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("ONLINE_MAIN_TAB")
     
-    pyautogui.moveTo(*constants.ONLINE_JOG_DOWN_HIGH_BTN)
+    pyautogui.moveTo(*constants.ONLINE_JOG_DOWN_FAST_BTN)
+    pyautogui.mouseDown(button="left")
+
+    try:
+        time.sleep(seconds)
+    finally:
+        pyautogui.mouseUp(button="left")
+        
+# Online Tab
+# Presses the jog down slow button for a given amount of seconds
+def jog_down_slow(seconds: int) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
+    pyautogui.moveTo(*constants.ONLINE_JOG_DOWN_SLOW_BTN)
     pyautogui.mouseDown(button="left")
 
     try:
