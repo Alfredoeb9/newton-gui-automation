@@ -1,8 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from typing import Literal
 from fastapi import Query
 from pydantic import BaseModel
 
+import time
+import asyncio
 import helper_func
 import newton_gui
 import ocr
@@ -333,3 +335,25 @@ def get_data(
         "status": "success",
         "data": data
     }
+    
+@app.websocket("/ws/data")
+async def websocket_data(websocket: WebSocket):
+    
+    await websocket.accept()
+    
+    try:
+        while True:
+            start_time = time.perf_counter()
+            
+            data = ocr.read_newton_values("all")
+            
+            elapsed = time.perf_counter() - start_time
+            
+            data["ocr_time_seconds"] = round(elapsed, 4)
+            
+            await websocket.send_json(data)
+            
+            await asyncio.sleep(0.25)
+            
+    except WebSocketDisconnect:
+        print("Client disconnected")
