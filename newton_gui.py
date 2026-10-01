@@ -35,6 +35,36 @@ def get_filters() -> list[dict[str, str]]:
 
     return filterArray
 
+# Online Tab
+def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int):
+    """configures specimen
+
+    Args:
+        specimen_id (str): name or ID given to the specimen
+        specimen_width (int): width of the specimen
+        specimen_depth (int): depth of the speciment
+    """
+    helper_func.activate_newton()
+    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    
+    pyautogui.click(*constants.ONLINE_SPECIMEN_CONFIG_BUTTON)
+    time.sleep(0.01)
+    
+    # Paste in users ID name into ID field
+    helper_func.clear_input_field(*constants.ONLINE_CONFIG_ID)
+    pyautogui.write(str(specimen_id))
+    pyautogui.press("enter")
+    
+    helper_func.clear_input_field(*constants.ONLINE_CONFIG_WIDTH)
+    pyautogui.write(str(specimen_width))
+    pyautogui.press("enter")
+    
+    helper_func.clear_input_field(*constants.ONLINE_CONFIG_DEPTH)
+    pyautogui.write(str(specimen_depth))
+    pyautogui.press("enter")
+    
+    pyautogui.click(*constants.ONLINE_CONFIG_ENTER_BTN)
+
 # Machine Management Tab
 def set_jog_high_speed(speed: int) -> None:
     helper_func.activate_newton()
@@ -204,7 +234,7 @@ def pause_resume_btn() -> None:
     pyautogui.click(*constants.ONLINE_PAUSE_RESUME_BTN)
 
 # Report Tab
-def download_batch(batchID) -> None:
+def download_report(batchID) -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("REPORT_MAIN_TAB")
     helper_func.activate_tab("REPORT_DOWNLOAD_TAB")
@@ -212,10 +242,29 @@ def download_batch(batchID) -> None:
     print(f"Downloading batch {batchID}")
     
     pyautogui.click(*constants.REPORT_BATCHES_UNNAMED)
-    pyautogui.write("A709_S5_09122024_151933")
+    pyautogui.write(str(batchID))
     pyautogui.click(*constants.REPORT_DOWNLOAD_REPORT)
     time.sleep(0.5)
     pyautogui.click(*constants.REPORT_DOWNLOAD_COMPLETE_BUTTON)
     
-if __name__ == "__main__":
-    download_batch()
+# Report Tab
+def download_report(specimen_ID) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("REPORT_MAIN_TAB")
+    helper_func.activate_tab("REPORT_VIEW_TAB")
+    
+    print(f"Downloading csv {specimen_ID}")
+    
+    pyautogui.click(*constants.REPORT_VIEW_BATCH_TAB)
+    pyautogui.write("unnamed")
+    
+    pyautogui.click(*constants.REPORT_VIEW_SPEC_SELECT)
+    pyautogui.write(str(specimen_ID))
+    
+    pyautogui.click(*constants.REPORT_VIEW_LOAD_BTN)
+    time.sleep(0.1)
+    pyautogui.click(*constants.REPORT_VIEW_EXPORT_CSV_BTN)
+    
+    pyautogui.click(*constants.REPORT_VIEW_EXPORT_CHANNEL_SELECT_ALL_BTN)
+    pyautogui.click(*constants.REPORT_VIEW_FINAL_EXPORT_CSV_BTN)
+    

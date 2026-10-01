@@ -117,6 +117,27 @@ def select_test(selection: TestSelection):
         "status": "selected",
         "test": selected_filter
     }
+    
+@app.post("/tests/configure_specimen")
+def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int):
+    helper_func.require_newton_running()
+    
+    try:
+        newton_gui.configure_specimen(specimen_id, specimen_width, specimen_depth)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to configure speciment: {e}"
+        )
+        
+    return {
+        "status": "complete",
+        "specimen": {
+            "id": specimen_id,
+            "width": specimen_width,
+            "depth": specimen_depth
+        }
+    }    
 
 
 # POST API to start test
@@ -341,6 +362,41 @@ def get_data(
         "status": "success",
         "data": data
     }
+    
+@app.post("/report/download")
+def download_report(batchID: str):
+    helper_func.require_newton_running()
+    
+    try:
+        report = newton_gui.download_report(batchID)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to download Newton report: {e}"
+        )
+        
+    return {
+        "status": "success",
+        "sent_to": report
+    }
+    
+@app.post("/report/extract_csv")
+def extract_csv(specimen_ID: str):
+    helper_func.require_newton_running()
+        
+    try:
+        report = newton_gui.download_report(specimen_ID)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to download Newton report: {e}"
+        )
+        
+    return {
+        "status": "success",
+        "sent_to": report
+    }
+        
     
 # Websocket to listen to S:Strain Ch:Position Ch:Load values
 # Approx ~0.25 - 0.5+ seconds for each run
