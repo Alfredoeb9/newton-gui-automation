@@ -31,7 +31,7 @@ def test_start_btn():
 
         newton_gui.start_test()
 
-        mock_pyautogui.click.assert_called_once_with(
+        mock_pyautogui.click.assert_any_call(
             *newton_gui.constants.ONLINE_START_STOP_BTN
         )
 

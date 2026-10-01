@@ -1,8 +1,10 @@
 import pytesseract
 import pyautogui
-import data_logger
+import cv2
+import numpy as np
 from PIL import Image
 import constants
+import data_logger
 from helper_func import activate_newton, buildDataObject
 
 # tessearact executable file
@@ -144,3 +146,75 @@ def read_newton_values(query: str | None = None) -> dict[str, str]:
     data_logger.save_reading(data, query)
 
     return data
+
+def read_start_stop_button():
+    """
+    Takes a screenshot of the Newton Start/Stop button.
+
+    Returns:
+        screenshot of the Start/Stop button.
+    """
+
+    screenshot = capture_value(
+        constants.ONLINE_START_STOP_TL_BTN,
+        constants.ONLINE_START_STOP_BL_BTN
+    )
+
+    return screenshot
+
+
+def get_start_stop_state():
+    """
+    Determines whether the Newton Start/Stop button
+    is currently showing the Start or Stop symbol.
+
+    Returns:
+        "start" if the Start symbol is detected.
+        "stop" if the Stop symbol is detected.
+    """
+    screenshot = read_start_stop_button()
+
+    current_image = np.array(screenshot.convert("RGB"))
+
+    start_image = np.array(Image.open(constants.START_BUTTON_IMAGE).convert("RGB"))
+
+    stop_image = np.array(
+        Image.open(constants.STOP_BUTTON_IMAGE).convert("RGB")
+    )
+
+    # Make sure all images are the same size
+    if current_image.shape != start_image.shape:
+        raise RuntimeError(
+            f"Start image size does not match current screenshot: "
+            f"{current_image.shape} vs {start_image.shape}"
+        )
+
+    if current_image.shape != stop_image.shape:
+        raise RuntimeError(
+            f"Stop image size does not match current screenshot: "
+            f"{current_image.shape} vs {stop_image.shape}"
+        )
+
+    # Calculate pixel differences
+    start_score = np.mean(
+        np.abs(
+            current_image.astype(float)
+            - start_image.astype(float)
+        )
+    )
+
+    stop_score = np.mean(
+        np.abs(
+            current_image.astype(float)
+            - stop_image.astype(float)
+        )
+    )
+
+    print(f"Start difference: {start_score:.2f}")
+    print(f"Stop difference: {stop_score:.2f}")
+
+    # Lower score = more similar
+    if start_score < stop_score:
+        return "start"
+
+    return "stop"

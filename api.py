@@ -31,6 +31,8 @@ class TestRunRequest(BaseModel):
     specimen_id: str
     specimen_width: int
     specimen_depth: int
+    specimen_gauge: int | None = None
+    specimen_span: int | None = None
     
 # GET API to get current health and vitals of software and hardware
 @app.get("/health")
@@ -125,11 +127,11 @@ def select_test(selection: TestSelection):
     }
     
 @app.post("/tests/configure_specimen")
-def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int):
+def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int, specimen_guage: int | None = None, specimen_span: int | None = None):
     helper_func.require_newton_running()
     
     try:
-        newton_gui.configure_specimen(specimen_id, specimen_width, specimen_depth)
+        newton_gui.configure_specimen(specimen_id, specimen_width, specimen_depth, specimen_guage, specimen_span)
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -763,7 +765,9 @@ def run_test(request: TestRunRequest):
         newton_gui.configure_specimen(
             request.specimen_id,
             request.specimen_width,
-            request.specimen_depth
+            request.specimen_depth,
+            request.specimen_gauge,
+            request.specimen_span,
         )
 
         # Start test

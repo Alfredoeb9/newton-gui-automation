@@ -4,6 +4,7 @@ import psutil
 from pathlib import Path
 import constants
 import helper_func
+from ocr import ocr
 
 def health():
     print("Testing health ")
@@ -36,7 +37,7 @@ def get_filters() -> list[dict[str, str]]:
     return filterArray
 
 # Online Tab
-def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int):
+def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int, specimen_guage: int | None = None, specimen_span: int | None = None):
     """configures specimen
 
     Args:
@@ -62,6 +63,16 @@ def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: in
     helper_func.clear_input_field(*constants.ONLINE_CONFIG_DEPTH)
     pyautogui.write(str(specimen_depth))
     pyautogui.press("enter")
+    
+    if specimen_guage is not None:
+        helper_func.clear_input_field(*constants.ONLINE_CONFIG_GAUGE)
+        pyautogui.write(str(specimen_guage))
+        pyautogui.press("enter")
+        
+    if specimen_span is not None:
+            helper_func.clear_input_field(*constants.ONLINE_CONFIG_SPAN)
+            pyautogui.write(str(specimen_span))
+            pyautogui.press("enter")
     
     pyautogui.click(*constants.ONLINE_CONFIG_ENTER_BTN)
 
@@ -111,8 +122,8 @@ def set_home_position(pos) -> None:
 
 # Online Tab
 def clear_pos_tare() -> None:
-    helper_func.activate_newton()
-    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    # helper_func.activate_newton()
+    # helper_func.activate_tab("ONLINE_MAIN_TAB")
     
     try:
         pyautogui.click(*constants.ONLINE_POS_TARE_BTN)
@@ -122,8 +133,8 @@ def clear_pos_tare() -> None:
     
 # Online Tab
 def clear_load_tare() -> None:
-    helper_func.activate_newton()
-    helper_func.activate_tab("ONLINE_MAIN_TAB")
+    # helper_func.activate_newton()
+    # helper_func.activate_tab("ONLINE_MAIN_TAB")
     
     try:
         pyautogui.click(*constants.ONLINE_LOAD_TARE_BTN)
@@ -214,6 +225,8 @@ def set_filter_online_tab(filter_name: str) -> None:
 def start_test() -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("ONLINE_MAIN_TAB")
+    clear_pos_tare()
+    clear_load_tare()
     # if (START_FLAG == False):
     #     START_FLAG = True
     print("Starting test ... ")
@@ -232,6 +245,43 @@ def pause_resume_btn() -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("ONLINE_MAIN_TAB")
     pyautogui.click(*constants.ONLINE_PAUSE_RESUME_BTN)
+    
+def wait_for_test_complete(specimen_id: str, timeout: int = 3600):
+    start_time = time.time()
+
+    while True:
+        state = ocr.get_start_stop_state()
+        
+        print(f"Start check: {state}")
+
+        if state == "stop":
+            print("Test has started.")
+            break
+
+        if time.time() - start_time > timeout:
+            raise TimeoutError(
+                f"Test {specimen_id} never started"
+            )
+
+        time.sleep(1)
+
+    # Now we know the test actually started.
+    # Wait for Stop -> Start.
+    while True:
+        state = ocr.get_start_stop_state()
+        
+        print(f"Test check: {state}")
+
+        if state == "start":
+            print("Test has finished.")
+            return
+
+        if time.time() - start_time > timeout:
+            raise TimeoutError(
+                f"Test {specimen_id} did not complete"
+            )
+
+        time.sleep(5)
 
 # Report Tab
 def download_report(batchID) -> None:
