@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from typing import Literal
 from fastapi import Query
 from pydantic import BaseModel
@@ -324,6 +324,42 @@ def jog_down_slow(seconds: float = 1):
         "seconds": seconds
     }
     
+@app.post("/report/download")
+def download_report(batchID: str):
+    helper_func.require_newton_running()
+    
+    try:
+        report = newton_gui.download_report(batchID)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to download Newton report: {e}"
+        )
+        
+    return {
+        "status": "success",
+        "sent_to": report
+    }
+    
+@app.post("/report/extract_csv")
+def extract_csv(specimen_ID: str):
+    helper_func.require_newton_running()
+        
+    try:
+        csv_path = newton_gui.extract_report_to_csv(specimen_ID)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to extract Newton report to csv: {e}"
+        )
+        
+    return FileResponse(
+        path = csv_path,
+        media_type = "text/csv",
+        filename = f"{specimen_ID}.csv"
+    )
+        
+        
 @app.get(
     "/data",
     summary="Read Newton test data",
@@ -363,40 +399,6 @@ def get_data(
         "data": data
     }
     
-@app.post("/report/download")
-def download_report(batchID: str):
-    helper_func.require_newton_running()
-    
-    try:
-        report = newton_gui.download_report(batchID)
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to download Newton report: {e}"
-        )
-        
-    return {
-        "status": "success",
-        "sent_to": report
-    }
-    
-@app.post("/report/extract_csv")
-def extract_csv(specimen_ID: str):
-    helper_func.require_newton_running()
-        
-    try:
-        report = newton_gui.download_report(specimen_ID)
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to download Newton report: {e}"
-        )
-        
-    return {
-        "status": "success",
-        "sent_to": report
-    }
-        
     
 # Websocket to listen to S:Strain Ch:Position Ch:Load values
 # Approx ~0.25 - 0.5+ seconds for each run

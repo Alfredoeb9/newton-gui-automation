@@ -248,7 +248,7 @@ def download_report(batchID) -> None:
     pyautogui.click(*constants.REPORT_DOWNLOAD_COMPLETE_BUTTON)
     
 # Report Tab
-def download_report(specimen_ID) -> None:
+def extract_report_to_csv(specimen_ID) -> str:
     helper_func.activate_newton()
     helper_func.activate_tab("REPORT_MAIN_TAB")
     helper_func.activate_tab("REPORT_VIEW_TAB")
@@ -268,3 +268,11 @@ def download_report(specimen_ID) -> None:
     pyautogui.click(*constants.REPORT_VIEW_EXPORT_CHANNEL_SELECT_ALL_BTN)
     pyautogui.click(*constants.REPORT_VIEW_FINAL_EXPORT_CSV_BTN)
     
+    csv_path =  constants.CSV_REPORT_FOLDER / f"{specimen_ID}.csv"
+
+    if not csv_path.exists():
+        raise FileNotFoundError(
+            f"CSV file was not created: {csv_path}"
+        )
+
+    return str(csv_path)
