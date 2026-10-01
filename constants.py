@@ -94,5 +94,5 @@ MAX_JOG_SECONDS = 10
 
 
 REPORTS_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports")
-
+CSV_REPORT_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports\Unnamed")
 DOWNLOAD_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports\Shipra data\MAX Phase creep")
