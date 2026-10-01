@@ -26,6 +26,12 @@ app = FastAPI(
 class TestSelection(BaseModel):
     name: str
     
+class TestRunRequest(BaseModel):
+    test_name: str
+    specimen_id: str
+    specimen_width: int
+    specimen_depth: int
+    
 # GET API to get current health and vitals of software and hardware
 @app.get("/health")
 def health():
@@ -712,3 +718,79 @@ def live_page():
 
     </html>
     """
+    
+# Master API:
+@app.post("/tests/run")
+def run_test(request: TestRunRequest):
+    
+    """
+    ## Complete end to end test
+
+    1. Run `/tests` to get the possible filters.
+    2. Select a filter.
+    3. Paste the filter into `"test_name"`.
+    4. Provide the specimen information.
+
+    **Raises:**
+        HTTPException: show errors to the client
+    """
+
+    helper_func.require_newton_running()
+
+    try:
+
+        # Select test
+        filters = newton_gui.get_filters()
+
+        selected_filter = next(
+            (
+                test
+                for test in filters
+                if test["name"] == request.test_name
+            ),
+            None
+        )
+
+        if selected_filter is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Test not found: {request.test_name}"
+            )
+
+        newton_gui.set_filter_online_tab(selected_filter["name"])
+        
+        # Configure specimen
+        newton_gui.configure_specimen(
+            request.specimen_id,
+            request.specimen_width,
+            request.specimen_depth
+        )
+
+        # Start test
+        newton_gui.start_test()
+
+        # Wait for test
+        newton_gui.wait_for_test_complete(request.specimen_id)
+        
+        # Download report
+        newton_gui.download_report(request.specimen_id)
+
+        # Export CSV
+        csv_path = newton_gui.extract_report_to_csv(request.specimen_id)
+
+        # Return CSV
+        return FileResponse(
+            path=csv_path,
+            media_type="text/csv",
+            filename=f"{request.specimen_id}.csv"
+        )
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Test workflow failed: {e}"
+        )
