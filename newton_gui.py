@@ -167,30 +167,6 @@ def jog_down_slow(seconds: int) -> None:
         time.sleep(seconds)
     finally:
         pyautogui.mouseUp(button="left")
-
-    
-def clear_input_field(x: int, y: int, main_tab: str | None = None) -> None:
-    """Clicks on input field box and clears any characters
-        
-    Parameters
-    ----------
-    x: int
-        The x coordinate of mouse when hovered over box
-    y: int
-        The y coordinate of mouse when hovered over box
-        
-    Returns
-    -------
-    None
-    """
-    
-    helper_func.activate_newton()
-    
-    if main_tab is not None:
-        helper_func.activate_tab(str(main_tab))
-    
-    pyautogui.click(x, y, clicks=3, interval=0.1)
-    pyautogui.press("backspace")
     
 # Online Tab
 # Places the filter option into the online filter tab
@@ -198,7 +174,7 @@ def set_filter_online_tab(filter_name: str) -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("ONLINE_MAIN_TAB")
     
-    clear_input_field(*constants.ONLINE_FILTER_TAB)
+    helper_func.clear_input_field(*constants.ONLINE_FILTER_TAB)
     
     pyautogui.write(str(filter_name))
     pyautogui.press("enter")
@@ -227,4 +203,19 @@ def pause_resume_btn() -> None:
     helper_func.activate_tab("ONLINE_MAIN_TAB")
     pyautogui.click(*constants.ONLINE_PAUSE_RESUME_BTN)
 
-
+# Report Tab
+def download_batch(batchID) -> None:
+    helper_func.activate_newton()
+    helper_func.activate_tab("REPORT_MAIN_TAB")
+    helper_func.activate_tab("REPORT_DOWNLOAD_TAB")
+    
+    print(f"Downloading batch {batchID}")
+    
+    pyautogui.click(*constants.REPORT_BATCHES_UNNAMED)
+    pyautogui.write("A709_S5_09122024_151933")
+    pyautogui.click(*constants.REPORT_DOWNLOAD_REPORT)
+    time.sleep(0.5)
+    pyautogui.click(*constants.REPORT_DOWNLOAD_COMPLETE_BUTTON)
+    
+if __name__ == "__main__":
+    download_batch()

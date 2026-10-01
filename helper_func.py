@@ -4,8 +4,10 @@ import pyautogui
 import constants
 from fastapi import HTTPException
 from pywinauto import Desktop
+from pathlib import Path
 import newton_gui
 import data_logger
+
 
 def require_admin() -> None:
     if not ctypes.windll.shell32.IsUserAnAdmin():
@@ -83,3 +85,60 @@ def buildDataObject(values: dict[str, str]) -> dict[str, str]:
         data["load_max"] = values["load_max"] + " N"
 
     return data
+
+def copy_string_from_field(x: int, y: int):
+    """Clicks on input field box and copys any string in the input field
+            
+        Parameters
+        ----------
+        x: int
+            The x coordinate of mouse when hovered over box
+        y: int
+            The y coordinate of mouse when hovered over box
+            
+        Returns
+        -------
+        None
+    """
+    activate_newton()
+        
+    pyautogui.click(x, y, clicks=3, interval=0.1)
+    pyautogui.press("ctrl", "c")
+
+def clear_input_field(x: int, y: int, main_tab: str | None = None) -> None:
+    """Clicks on input field box and clears any characters
+        
+    Parameters
+    ----------
+    x: int
+        The x coordinate of mouse when hovered over box
+    y: int
+        The y coordinate of mouse when hovered over box
+        
+    Returns
+    -------
+    None
+    """
+    
+    activate_newton()
+    
+    if main_tab is not None:
+        activate_tab(str(main_tab))
+    
+    pyautogui.click(x, y, clicks=3, interval=0.1)
+    pyautogui.press("backspace")
+    
+def extract_batches():
+    # Find all .cmm files
+    cmm_files = constants.DOWNLOAD_FOLDER.rglob("*.cmm")
+
+    # Remove duplicates based on filename
+    unique_files = {}
+
+    for file in cmm_files:
+        unique_files[file.stem.lower()] = file
+
+    # Display results
+    for file in sorted(unique_files.values(), key=lambda x: x.stem.lower()):
+        print(file.stem)
+

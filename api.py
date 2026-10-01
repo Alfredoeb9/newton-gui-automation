@@ -1,16 +1,22 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse
 from typing import Literal
 from fastapi import Query
 from pydantic import BaseModel
 
-import time
 import asyncio
+from ocr.OCR_background import update_newton_data
+import ocr.OCR_background as OCR_background
 import helper_func
 import newton_gui
-import ocr
+import ocr.ocr as ocr
 from constants import ( MAX_JOG_SECONDS )
 
 helper_func.require_admin()
+
+ocr_task = None
+active_connections = 0
 
 app = FastAPI(
     title = "Newton GUI API",
@@ -336,24 +342,315 @@ def get_data(
         "data": data
     }
     
+# Websocket to listen to S:Strain Ch:Position Ch:Load values
+# Approx ~0.25 - 0.5+ seconds for each run
 @app.websocket("/ws/data")
 async def websocket_data(websocket: WebSocket):
-    
+
+    global ocr_task
+    global active_connections
+
     await websocket.accept()
-    
+
+    active_connections += 1
+
+    print(
+        f"Client connected. "
+        f"Active connections: {active_connections}"
+    )
+
+    # Start OCR if this is the first client
+    if ocr_task is None or ocr_task.done():
+
+        print("Starting OCR background task...")
+
+        ocr_task = asyncio.create_task(
+            OCR_background.update_newton_data()
+        )
+
     try:
+
         while True:
-            start_time = time.perf_counter()
-            
-            data = ocr.read_newton_values("all")
-            
-            elapsed = time.perf_counter() - start_time
-            
-            data["ocr_time_seconds"] = round(elapsed, 4)
-            
-            await websocket.send_json(data)
-            
+
+            await websocket.send_json(
+                OCR_background.latest_data
+            )
+
             await asyncio.sleep(0.25)
-            
+
     except WebSocketDisconnect:
+
         print("Client disconnected")
+    except asyncio.CancelledError:
+        print("WebSocket task cancelled")
+
+        raise
+    finally:
+
+        active_connections -= 1
+
+        print(
+            f"Active connections: {active_connections}"
+        )
+
+        # Stop OCR when nobody is listening
+        if active_connections == 0:
+
+            print("Stopping OCR background task...")
+
+            if ocr_task is not None:
+
+                ocr_task.cancel()
+
+                ocr_task = None
+                
+@app.get("/live", response_class=HTMLResponse)
+def live_page():
+
+    return """
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+
+        <title>Newton Live Data</title>
+
+        <style>
+
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 40px;
+            }
+
+            h1 {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .status {
+                text-align: center;
+                margin-bottom: 25px;
+                font-weight: bold;
+            }
+
+            .data-container {
+                max-width: 900px;
+                margin: auto;
+
+                display: grid;
+                grid-template-columns:
+                    repeat(3, 1fr);
+
+                gap: 20px;
+            }
+
+            .card {
+                background-color: white;
+                padding: 25px;
+                border-radius: 10px;
+
+                box-shadow:
+                    0 2px 8px
+                    rgba(0, 0, 0, 0.15);
+
+                text-align: center;
+            }
+
+            .label {
+                font-size: 18px;
+                color: #666;
+                margin-bottom: 10px;
+            }
+
+            .value {
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .rate {
+                margin-top: 10px;
+                color: #555;
+            }
+
+            .max {
+                margin-top: 10px;
+                color: #777;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <h1>Newton Live Data</h1>
+
+        <div id="status" class="status">
+            Connecting...
+        </div>
+
+        <div class="data-container">
+
+            <div class="card">
+
+                <div class="label">
+                    Strain
+                </div>
+
+                <div id="strain" class="value">
+                    --
+                </div>
+
+                <div class="rate">
+                    Rate:
+                    <span id="strain_rate">
+                        --
+                    </span>
+                </div>
+
+                <div class="max">
+                    Max:
+                    <span id="strain_max">
+                        --
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="label">
+                    Position
+                </div>
+
+                <div id="position" class="value">
+                    --
+                </div>
+
+                <div class="rate">
+                    Rate:
+                    <span id="position_rate">
+                        --
+                    </span>
+                </div>
+
+                <div class="max">
+                    Max:
+                    <span id="position_max">
+                        --
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="label">
+                    Load
+                </div>
+
+                <div id="load" class="value">
+                    --
+                </div>
+
+                <div class="rate">
+                    Rate:
+                    <span id="load_rate">
+                        --
+                    </span>
+                </div>
+
+                <div class="max">
+                    Max:
+                    <span id="load_max">
+                        --
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <script>
+            const status = document.getElementById("status");
+
+            const strain = document.getElementById("strain");
+
+            const strainRate = document.getElementById("strain_rate");
+
+            const strainMax = document.getElementById("strain_max");
+
+            const position = document.getElementById("position");
+
+            const positionRate = document.getElementById("position_rate");
+
+            const positionMax = document.getElementById("position_max");
+
+            const load = document.getElementById("load");
+
+            const loadRate = document.getElementById("load_rate");
+
+            const loadMax = document.getElementById("load_max");
+
+
+            const protocol =
+                window.location.protocol === "https:"
+                    ? "wss:"
+                    : "ws:";
+                    
+            const websocket =
+                new WebSocket(
+                    protocol +
+                    "//" +
+                    window.location.host +
+                    "/ws/data"
+                );
+
+            websocket.onopen = function() {
+                status.textContent = "Connected";
+                status.style.color ="green";
+            };
+
+            websocket.onmessage = function(event) {
+                const data = JSON.parse(event.data);                    
+
+                strain.textContent = data.strain ?? "--";
+                strainRate.textContent = data.strain_rate ?? "--";
+                strainMax.textContent = data.strain_max ?? "--";
+
+                position.textContent =data.position ?? "--";
+                positionRate.textContent = data.position_rate ?? "--";
+                positionMax.textContent = data.position_max ?? "--";
+
+
+                load.textContent = data.load ?? "--";
+                loadRate.textContent = data.load_rate ?? "--";
+                loadMax.textContent = data.load_max ?? "--";
+
+            };
+
+
+            websocket.onclose = function() {
+                status.textContent = "Disconnected";
+                status.style.color = "red";
+            };
+
+
+            websocket.onerror = function() {
+                status.textContent = "Connection error";
+                status.style.color = "red";
+            };
+            
+            
+
+        </script>
+
+    </body>
+
+    </html>
+    """

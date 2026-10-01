@@ -64,8 +64,20 @@ ONLINE_LOAD_MAX_VALUE_BOTTOM_RIGHT = (948, 413)
 
 # Report tab
 REPORT_MAIN_TAB = (1280, 168)
+REPORT_DOWNLOAD_TAB = (458, 205)
+
+REPORT_BATCHES_UNNAMED = (1286, 254)
+
+REPORT_DOWNLOAD_REPORT = (1518, 265)
+
+REPORT_DOWNLOAD_COMPLETE_BUTTON = (954, 578)
 
 # GUI interaction
 HIGHLIGHT_BOX_CLICK = 3
 
 MAX_JOG_SECONDS = 10
+
+
+REPORTS_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports")
+
+DOWNLOAD_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports\Shipra data\MAX Phase creep")
