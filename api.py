@@ -223,6 +223,20 @@ def resume_test():
 # POST API to run jog up high button
 @app.post("/jog/up/fast")
 def jog_up_fast(seconds: float = 1):
+    """Manually jog up fast for a given number of seconds at a rate of 
+       
+        * Min: 250.79 mm/min -> 9.87 in/min
+        * Max: 252.65 mm/min -> 9.94 in/min
+
+    Args:
+        seconds (float, optional): The number of seconds to jog up fast. Defaults to 1.
+
+    Raises:
+        HTTPException: 
+
+    Returns:
+        _type_: { "key": "value" }
+    """
     
     helper_func.require_newton_running()
     
@@ -254,6 +268,20 @@ def jog_up_fast(seconds: float = 1):
 # POST API to run jog up high button
 @app.post("/jog/up/slow")
 def jog_up_slow(seconds: float = 1):
+    """Manually jog up slow for a given number of seconds at a rate of 
+        
+        * Min: 25.12 mm/min -> 0.9891 in/min
+        * Max: 25.29 mm/min -> 0.996 in/min
+
+    Args:
+        seconds (float, optional): The number of seconds to jog up slow. Defaults to 1.
+
+    Raises:
+        HTTPException: 
+
+    Returns:
+        _type_: { "key": "value" }
+    """
     
     helper_func.require_newton_running()
     
@@ -285,6 +313,20 @@ def jog_up_slow(seconds: float = 1):
 # POST API to run jog down high button
 @app.post("/jog/down/fast")
 def jog_down_fast(seconds: float = 1):
+    """Manually jog down fast for a given number of seconds at a rate of 
+        
+        * Min: 250.79 mm/min -> 9.87 in/min
+        * Max: 252.65 mm/min -> 9.94 in/min
+        
+    Args:
+        seconds (float, optional): The number of seconds to jog down fast. Defaults to 1.
+
+    Raises:
+        HTTPException: 
+
+    Returns:
+        _type_: { "key": "value" }
+    """
     
     helper_func.require_newton_running()
     
@@ -310,6 +352,20 @@ def jog_down_fast(seconds: float = 1):
     # POST API to run jog down high button
 @app.post("/jog/down/slow")
 def jog_down_slow(seconds: float = 1):
+    """Manually jog down slow for a given number of seconds at a rate of 
+            
+            * Min: 25.12 mm/min -> 0.9891 in/min
+            * Max: 25.29 mm/min -> 0.996 in/min
+    
+    Args:
+        seconds (float, optional): The number of seconds to jog down slow. Defaults to 1.
+
+    Raises:
+        HTTPException: 
+
+    Returns:
+        _type_: { "key": "value" }
+    """
     
     helper_func.require_newton_running()
     
@@ -412,6 +468,11 @@ def get_data(
 # Approx ~0.25 - 0.5+ seconds for each run
 @app.websocket("/ws/data")
 async def websocket_data(websocket: WebSocket):
+    """Opens a websocket and connects user through UI browser to receive continuous data flow
+
+    Args:
+        websocket (WebSocket):
+    """
 
     global ocr_task
     global active_connections
@@ -420,27 +481,20 @@ async def websocket_data(websocket: WebSocket):
 
     active_connections += 1
 
-    print(
-        f"Client connected. "
-        f"Active connections: {active_connections}"
-    )
+    print(f"Client connected. "f"Active connections: {active_connections}")
 
     # Start OCR if this is the first client
     if ocr_task is None or ocr_task.done():
 
         print("Starting OCR background task...")
 
-        ocr_task = asyncio.create_task(
-            OCR_background.update_newton_data()
-        )
+        ocr_task = asyncio.create_task(OCR_background.update_newton_data())
 
     try:
 
         while True:
 
-            await websocket.send_json(
-                OCR_background.latest_data
-            )
+            await websocket.send_json(OCR_background.latest_data)
 
             await asyncio.sleep(0.25)
 
@@ -455,9 +509,7 @@ async def websocket_data(websocket: WebSocket):
 
         active_connections -= 1
 
-        print(
-            f"Active connections: {active_connections}"
-        )
+        print(f"Active connections: {active_connections}")
 
         # Stop OCR when nobody is listening
         if active_connections == 0:
