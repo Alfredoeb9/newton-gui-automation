@@ -6,8 +6,6 @@ from fastapi import HTTPException
 from pywinauto import Desktop
 from pathlib import Path
 import newton_gui
-import data_logger
-
 
 def require_admin() -> None:
     if not ctypes.windll.shell32.IsUserAnAdmin():

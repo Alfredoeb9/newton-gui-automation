@@ -57,20 +57,12 @@ def test_start_test():
             mock_start.assert_called_once()
             
 def test_start_test_when_newton_is_not_running():
-    with patch(
-        "api.newton_gui.is_newton_running",
-        return_value=False
-    ):
-
+    with patch("api.newton_gui.is_newton_running", return_value=False):
         response = client.post("/tests/start")
-
         assert response.status_code == 503
         
 def test_select_nonexistent_test():
-    with patch(
-        "api.newton_gui.get_filters",
-        return_value=[]
-    ):
+    with patch("api.newton_gui.get_filters", return_value=[]):
 
         response = client.post(
             "/tests/select",

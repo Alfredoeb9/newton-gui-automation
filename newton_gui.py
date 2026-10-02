@@ -259,9 +259,7 @@ def wait_for_test_complete(specimen_id: str, timeout: int = 3600):
             break
 
         if time.time() - start_time > timeout:
-            raise TimeoutError(
-                f"Test {specimen_id} never started"
-            )
+            raise TimeoutError(f"Test {specimen_id} never started")
 
         time.sleep(1)
 

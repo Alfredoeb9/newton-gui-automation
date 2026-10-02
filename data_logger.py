@@ -11,9 +11,7 @@ def save_reading(values: dict, query: str) -> None:
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now().strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     with open(LOG_FILE, "a") as file:
 

@@ -197,16 +197,11 @@ def get_start_stop_state():
 
     # Calculate pixel differences
     start_score = np.mean(
-        np.abs(
-            current_image.astype(float)
-            - start_image.astype(float)
-        )
+        np.abs(current_image.astype(float) - start_image.astype(float))
     )
 
     stop_score = np.mean(
-        np.abs(
-            current_image.astype(float)
-            - stop_image.astype(float)
+        np.abs(current_image.astype(float) - stop_image.astype(float)
         )
     )
 

@@ -31,9 +31,7 @@ def test_start_btn():
 
         newton_gui.start_test()
 
-        mock_pyautogui.click.assert_any_call(
-            *newton_gui.constants.ONLINE_START_STOP_BTN
-        )
+        mock_pyautogui.click.assert_any_call(*newton_gui.constants.ONLINE_START_STOP_BTN)
 
 def test_jog_up_high():
     
@@ -43,14 +41,8 @@ def test_jog_up_high():
             newton_gui.jog_up_fast(2)
 
             mock_pyautogui.moveTo.assert_called_once_with(1530, 603)
-
-            mock_pyautogui.mouseDown.assert_called_once_with(
-                button="left"
-            )
-
-            mock_pyautogui.mouseUp.assert_called_once_with(
-                button="left"
-            )
+            mock_pyautogui.mouseDown.assert_called_once_with(button="left")
+            mock_pyautogui.mouseUp.assert_called_once_with(button="left")
             
 def test_jog_up_releases_mouse_on_error():
     
@@ -69,9 +61,7 @@ def test_jog_up_releases_mouse_on_error():
                     except RuntimeError:
                         pass
 
-                    mock_pyautogui.mouseUp.assert_called_once_with(
-                        button="left"
-                    )
+                    mock_pyautogui.mouseUp.assert_called_once_with(button="left")
             
 def test_jog_down_fast():
     
@@ -81,14 +71,8 @@ def test_jog_down_fast():
             newton_gui.jog_down_fast(2)
 
             mock_pyautogui.moveTo.assert_called_once_with(1528, 818)
-
-            mock_pyautogui.mouseDown.assert_called_once_with(
-                button="left"
-            )
-
-            mock_pyautogui.mouseUp.assert_called_once_with(
-                button="left"
-            )
+            mock_pyautogui.mouseDown.assert_called_once_with(button="left")
+            mock_pyautogui.mouseUp.assert_called_once_with(button="left")
 
 def test_jog_down_releases_mouse_on_error():
     with patch("newton_gui.helper_func.activate_newton"):
@@ -106,6 +90,4 @@ def test_jog_down_releases_mouse_on_error():
                     except RuntimeError:
                         pass
 
-                    mock_pyautogui.mouseUp.assert_called_once_with(
-                        button="left"
-                    )
+                    mock_pyautogui.mouseUp.assert_called_once_with(button="left")
