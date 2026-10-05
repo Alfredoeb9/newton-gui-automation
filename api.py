@@ -407,12 +407,17 @@ def extract_batches():
     }
     
 @app.post("/report/download")
-def download_report(batchID: str):
+def download_report(batchID: str | None = None):
     helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     try:
-        report = newton_gui.download_report(batchID)
+        if batchID is None:
+            batches = helper_func.extract_batches()
+            most_recent_specimen = batches[0].stem
+            report = newton_gui.download_report(most_recent_specimen)
+        else:
+            report = newton_gui.download_report(batchID)
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -425,12 +430,18 @@ def download_report(batchID: str):
     }
     
 @app.post("/report/extract_csv")
-def extract_csv(specimen_ID: str):
+def extract_csv(specimen_ID: str | None = None):
     helper_func.set_newton_size()
     helper_func.require_newton_running()
         
     try:
-        csv_path = newton_gui.extract_report_to_csv(specimen_ID)
+        if specimen_ID is None:
+            batches = helper_func.extract_batches()
+            most_recent_specimen = batches[0]
+            print(most_recent_specimen)
+            csv_path = newton_gui.extract_report_to_csv(most_recent_specimen)
+        else:
+            csv_path = newton_gui.extract_report_to_csv(specimen_ID)
     except Exception as e:
         raise HTTPException(
             status_code=500,

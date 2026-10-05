@@ -188,20 +188,21 @@ def clear_input_field(x: int, y: int, main_tab: str | None = None) -> None:
     pyautogui.press("backspace")
     
 def extract_batches():
-    # Find all .cmm files
     cmm_files = constants.DOWNLOAD_FOLDER.rglob("*.cmm")
 
-    # Remove duplicates based on filename
     unique_files = {}
 
     for file in cmm_files:
         unique_files[file.stem.lower()] = file
 
-    # Display results
     batches = sorted(
-        [file.stem for file in unique_files.values()],
-        key=str.lower
+        unique_files.values(),
+        key=lambda file: file.stat().st_mtime,
+        reverse=True
     )
-    
-    return batches
 
+    if not batches:
+        raise FileNotFoundError("No .cmm batch files found.")
+
+    batch_names = [file.stem for file in batches]
+    return batch_names
