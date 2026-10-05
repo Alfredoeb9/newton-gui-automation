@@ -5,6 +5,7 @@ from pathlib import Path
 import constants
 import helper_func
 from ocr import ocr
+from datetime import datetime
 
 def health():
     print("Testing health ")
@@ -288,10 +289,14 @@ def download_report(batchID) -> None:
     helper_func.activate_tab("REPORT_MAIN_TAB")
     helper_func.activate_tab("REPORT_DOWNLOAD_TAB")
     
+    # include the batchID + "_{date}_{time}"
+    # timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
+    # batch_id = f"{batchID}_{timestamp}"
     print(f"Downloading batch {batchID}")
     
     pyautogui.click(*constants.REPORT_BATCHES_UNNAMED)
     pyautogui.write(str(batchID))
+    pyautogui.press("enter")
     pyautogui.click(*constants.REPORT_DOWNLOAD_REPORT)
     time.sleep(0.5)
     pyautogui.click(*constants.REPORT_DOWNLOAD_COMPLETE_BUTTON)
@@ -302,13 +307,18 @@ def extract_report_to_csv(specimen_ID) -> str:
     helper_func.activate_tab("REPORT_MAIN_TAB")
     helper_func.activate_tab("REPORT_VIEW_TAB")
     
+    # include the batchID + "_{date}_{time}"
+    # timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
+    # batch_id = f"{specimen_ID}_{timestamp}"
     print(f"Downloading csv {specimen_ID}")
     
     pyautogui.click(*constants.REPORT_VIEW_BATCH_TAB)
     pyautogui.write("unnamed")
+    pyautogui.press("enter")
     
     pyautogui.click(*constants.REPORT_VIEW_SPEC_SELECT)
     pyautogui.write(str(specimen_ID))
+    pyautogui.press("enter")
     
     pyautogui.click(*constants.REPORT_VIEW_LOAD_BTN)
     time.sleep(0.1)
@@ -316,6 +326,13 @@ def extract_report_to_csv(specimen_ID) -> str:
     
     pyautogui.click(*constants.REPORT_VIEW_EXPORT_CHANNEL_SELECT_ALL_BTN)
     pyautogui.click(*constants.REPORT_VIEW_FINAL_EXPORT_CSV_BTN)
+    
+    # Press select folder button
+    pyautogui.click(*constants.REPORT_VIEW_SELECT_FOLDER_BTN)
+    # press extract csv button
+    pyautogui.click(*constants.REPORT_VIEW_COMPLETE_CSV_BTN)
+    # press exit button
+    pyautogui.click(*constants.REPORT_VIEW_EXIT_CSV_BTN)
     
     csv_path =  constants.CSV_REPORT_FOLDER / f"{specimen_ID}.csv"
 

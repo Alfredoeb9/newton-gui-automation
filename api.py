@@ -391,6 +391,21 @@ def jog_down_slow(seconds: float = 1):
         "seconds": seconds
     }
     
+@app.get("/extract/batches")
+def extract_batches():
+    try:
+        batches = helper_func.extract_batches()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to download Newton report: {e}"
+        )
+        
+    return {
+        "status": "success",
+        "batches": batches
+    }
+    
 @app.post("/report/download")
 def download_report(batchID: str):
     helper_func.set_newton_size()

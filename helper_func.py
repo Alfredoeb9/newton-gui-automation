@@ -198,6 +198,10 @@ def extract_batches():
         unique_files[file.stem.lower()] = file
 
     # Display results
-    for file in sorted(unique_files.values(), key=lambda x: x.stem.lower()):
-        print(file.stem)
+    batches = sorted(
+        [file.stem for file in unique_files.values()],
+        key=str.lower
+    )
+    
+    return batches
 
