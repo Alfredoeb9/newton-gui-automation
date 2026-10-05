@@ -1,6 +1,5 @@
 import pytesseract
 import pyautogui
-import cv2
 import numpy as np
 from PIL import Image
 import constants

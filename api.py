@@ -90,10 +90,9 @@ def get_tests():
     )
 )
 def select_test(selection: TestSelection):
-    
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    helper_func.activate_newton()
-
+    
     filters = newton_gui.get_filters()
 
     selected_filter = next(
@@ -128,6 +127,7 @@ def select_test(selection: TestSelection):
     
 @app.post("/tests/configure_specimen")
 def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int, specimen_guage: int | None = None, specimen_span: int | None = None):
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     try:
@@ -151,7 +151,7 @@ def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: in
 # POST API to start test
 @app.post("/tests/start")
 def start_test():
-
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     helper_func.activate_newton()
 
@@ -170,6 +170,7 @@ def start_test():
 # POST API to stop current test running
 @app.post("/tests/stop")
 def stop_test():
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     helper_func.activate_newton()
 
@@ -187,6 +188,7 @@ def stop_test():
 # POST API to pause running test
 @app.post("/tests/pause")
 def pause_test():
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     helper_func.activate_newton()
 
@@ -205,6 +207,7 @@ def pause_test():
 # POST API to resume running test
 @app.post("/tests/resume")
 def resume_test():
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     helper_func.activate_newton()
 
@@ -237,7 +240,7 @@ def jog_up_fast(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     if seconds <= 0:
@@ -282,7 +285,7 @@ def jog_up_slow(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     if seconds <= 0:
@@ -327,7 +330,7 @@ def jog_down_fast(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     if seconds <= 0:
@@ -366,7 +369,7 @@ def jog_down_slow(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     if seconds <= 0:
@@ -390,6 +393,7 @@ def jog_down_slow(seconds: float = 1):
     
 @app.post("/report/download")
 def download_report(batchID: str):
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     try:
@@ -407,6 +411,7 @@ def download_report(batchID: str):
     
 @app.post("/report/extract_csv")
 def extract_csv(specimen_ID: str):
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
         
     try:
@@ -443,7 +448,7 @@ def get_data(
         )
     )
 ):
-    
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
     
     try:
@@ -788,7 +793,7 @@ def run_test(request: TestRunRequest):
     **Raises:**
         HTTPException: show errors to the client
     """
-
+    helper_func.set_newton_size()
     helper_func.require_newton_running()
 
     try:

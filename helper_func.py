@@ -2,10 +2,19 @@ import psutil
 import ctypes
 import pyautogui
 import constants
+import time
+import win32gui
+import win32con
 from fastapi import HTTPException
 from pywinauto import Desktop
 from pathlib import Path
 import newton_gui
+
+DEFAULT_WIDTH = 1300
+DEFAULT_HEIGHT = 803
+
+DEFAULT_X = 310
+DEFAULT_Y = 115
 
 def require_admin() -> None:
     if not ctypes.windll.shell32.IsUserAnAdmin():
@@ -32,8 +41,33 @@ def get_newton_pid() -> int:
 
     raise RuntimeError("Newton.exe is not running")
 
+def find_newton_window():
+    result = None
+    
+    def callback(hwnd, _):
+        nonlocal result
+        
+        title = win32gui.GetWindowText(hwnd)
+        
+        if title != "Newton":
+            return
+        
+        left, top, right, bottom = win32gui.GetWindowRect(hwnd)
+        
+        width = right - left
+        height = bottom - top
+        
+        # Ignore hiddne/helper newton windows
+        if width > 500 and height > 500:
+            result = hwnd
+            
+    win32gui.EnumWindows(callback, None)
+    
+    return result
+
 # Make the newton app top level (must be running app or terminal as admin)
 def activate_newton() -> None:
+    find_newton_window()
     pid = get_newton_pid()
 
     windows = Desktop(backend="win32").windows()
@@ -47,6 +81,33 @@ def activate_newton() -> None:
             pass
 
     raise RuntimeError("Newton window not found")
+
+def set_newton_size():
+    
+    print("Waiting for Newton...")
+
+    while True:
+        hwnd = find_newton_window()
+
+        if hwnd:
+            print("Newton found.")
+
+            left, top, _, _ = win32gui.GetWindowRect(hwnd)
+                
+            win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+            
+            win32gui.SetWindowPos(hwnd, None, left, top, DEFAULT_WIDTH, DEFAULT_HEIGHT, win32con.SWP_NOZORDER)
+
+            print(
+                f"Newton resized to "
+                f"{DEFAULT_WIDTH} x {DEFAULT_HEIGHT}"
+            )
+
+            break
+
+        time.sleep(1)
+        
+    
 
 def activate_tab(tab_name: str) -> None:
     coordinates = getattr(constants, tab_name)

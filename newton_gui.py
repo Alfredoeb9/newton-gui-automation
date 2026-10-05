@@ -214,6 +214,7 @@ def jog_down_slow(seconds: int) -> None:
 def set_filter_online_tab(filter_name: str) -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("ONLINE_MAIN_TAB")
+    # time.sleep(0.1)
     
     helper_func.clear_input_field(*constants.ONLINE_FILTER_TAB)
     
