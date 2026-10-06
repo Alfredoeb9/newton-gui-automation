@@ -157,6 +157,8 @@ def start_test():
 
     try:
         newton_gui.start_test()
+        newton_gui.wait_for_test_complete()
+        newton_gui.confirm_finished_test()
     except Exception as e:
         raise HTTPException(
             status_code=500,

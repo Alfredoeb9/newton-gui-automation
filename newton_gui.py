@@ -289,9 +289,6 @@ def download_report(batchID) -> None:
     helper_func.activate_tab("REPORT_MAIN_TAB")
     helper_func.activate_tab("REPORT_DOWNLOAD_TAB")
     
-    # include the batchID + "_{date}_{time}"
-    # timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
-    # batch_id = f"{batchID}_{timestamp}"
     print(f"Downloading batch {batchID}")
     
     pyautogui.click(*constants.REPORT_BATCHES_UNNAMED)
@@ -307,9 +304,6 @@ def extract_report_to_csv(specimen_ID) -> str:
     helper_func.activate_tab("REPORT_MAIN_TAB")
     helper_func.activate_tab("REPORT_VIEW_TAB")
     
-    # include the batchID + "_{date}_{time}"
-    # timestamp = datetime.now().strftime("%m%d%Y_%H%M%S")
-    # batch_id = f"{specimen_ID}_{timestamp}"
     print(f"Downloading csv {specimen_ID}")
     
     pyautogui.click(*constants.REPORT_VIEW_BATCH_TAB)
@@ -342,3 +336,8 @@ def extract_report_to_csv(specimen_ID) -> str:
         )
 
     return str(csv_path)
+
+def confirm_finished_test() -> None:
+    pyautogui.click(*constants.ONLINE_CONFIRM_SUCCESSFUL_TEST)
+    pyautogui.press("esc")
+    pyautogui.press("esc")

@@ -46,15 +46,19 @@ def test_get_filters():
     ]
     
 def test_start_test():
-    with patch("api.newton_gui.is_newton_running", return_value=True):
-        with patch("api.newton_gui.start_test") as mock_start:
+    with patch("api.helper_func.set_newton_size"), \
+        patch("api.helper_func.require_newton_running"), \
+        patch("api.helper_func.activate_newton"), \
+        patch("api.newton_gui.start_test") as mock_start, \
+        patch("api.newton_gui.wait_for_test_complete"), \
+        patch("api.newton_gui.confirm_finished_test"):
 
-            response = client.post("/tests/start")
+        response = client.post("/tests/start")
 
-            assert response.status_code == 200
-            assert response.json()["status"] == "started"
+        assert response.status_code == 200
+        assert response.json()["status"] == "started"
 
-            mock_start.assert_called_once()
+        mock_start.assert_called_once()
             
 def test_start_test_when_newton_is_not_running():
     with patch("api.newton_gui.is_newton_running", return_value=False):
