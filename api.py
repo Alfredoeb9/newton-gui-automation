@@ -112,8 +112,8 @@ def get_tests():
     )
 )
 def select_test(selection: TestSelection):
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
+    helper_func.set_newton_size()
     
     filters = newton_gui.get_filters()
 
@@ -149,8 +149,8 @@ def select_test(selection: TestSelection):
     
 @app.post("/tests/configure_specimen")
 def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: int, specimen_guage: int | None = None, specimen_span: int | None = None):
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
+    helper_func.set_newton_size()
     
     try:
         newton_gui.configure_specimen(specimen_id, specimen_width, specimen_depth, specimen_guage, specimen_span)
@@ -173,9 +173,8 @@ def configure_specimen(specimen_id: str, specimen_width: int, specimen_depth: in
 # POST API to start test
 @app.post("/tests/start")
 def start_test():
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    helper_func.activate_newton()
+    helper_func.set_newton_size()
 
     try:
         newton_gui.start_test()
@@ -194,9 +193,8 @@ def start_test():
 # POST API to stop current test running
 @app.post("/tests/stop")
 def stop_test():
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    helper_func.activate_newton()
+    helper_func.set_newton_size()
 
     try:
         newton_gui.stop_test()
@@ -212,9 +210,8 @@ def stop_test():
 # POST API to pause running test
 @app.post("/tests/pause")
 def pause_test():
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    helper_func.activate_newton()
+    helper_func.set_newton_size()
 
     try:
         newton_gui.pause_resume_btn()
@@ -231,9 +228,8 @@ def pause_test():
 # POST API to resume running test
 @app.post("/tests/resume")
 def resume_test():
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    helper_func.activate_newton()
+    helper_func.set_newton_size()
 
     try:
         newton_gui.pause_resume_btn()
@@ -264,9 +260,9 @@ def jog_up_fast(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    
+    helper_func.set_newton_size()
+
     if seconds <= 0:
         raise HTTPException(
             status_code=400,
@@ -309,9 +305,9 @@ def jog_up_slow(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    
+    helper_func.set_newton_size()
+
     if seconds <= 0:
         raise HTTPException(
             status_code=400,
@@ -354,9 +350,9 @@ def jog_down_fast(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
-    
+    helper_func.set_newton_size()
+
     if seconds <= 0:
         raise HTTPException(
             status_code=400,
@@ -393,8 +389,8 @@ def jog_down_slow(seconds: float = 1):
     Returns:
         _type_: { "key": "value" }
     """
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
+    helper_func.set_newton_size()
     
     if seconds <= 0:
         raise HTTPException(
@@ -432,8 +428,8 @@ def extract_batches():
     
 @app.post("/report/download")
 def download_report(batchID: str | None = None):
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
+    helper_func.set_newton_size()
     
     try:
         if batchID is None:
@@ -455,8 +451,8 @@ def download_report(batchID: str | None = None):
     
 @app.post("/report/extract_csv")
 def extract_csv(specimen_ID: str | None = None):
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
+    helper_func.set_newton_size()
         
     try:
         if specimen_ID is None:
@@ -498,8 +494,8 @@ def get_data(
         )
     )
 ):
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
+    helper_func.set_newton_size()
     
     try:
         data = ocr.read_newton_values(query)
@@ -843,8 +839,8 @@ def run_test(request: TestRunRequest):
     **Raises:**
         HTTPException: show errors to the client
     """
-    helper_func.set_newton_size()
     helper_func.require_newton_running()
+    helper_func.set_newton_size()
 
     try:
 
