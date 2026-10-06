@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from typing import Literal
 from fastapi import Query
 from pydantic import BaseModel
-
+import time
 import asyncio
 from ocr.OCR_background import update_newton_data
 import ocr.OCR_background as OCR_background
@@ -20,7 +20,29 @@ active_connections = 0
 
 app = FastAPI(
     title = "Newton GUI API",
-    description = "API wrapper for Newton GUI automation"
+    description = """API wrapper for Newton GUI automation
+    
+    To Run end-to-end Test:
+    
+        1. Run `http://146.139.240.17:8000/tests` API to get the possible filters.
+        2. Copy filter name for test to run
+        3. Run `http://146.139.240.17:8000/tests/run` API
+        4. Paste the filter name copied in step 2 into `"test_name"`.
+        5. Provide the specimen information.
+        
+    OR, Follow the API path:
+    
+        1. http://146.139.240.17:8000/health
+        2. http://146.139.240.17:8000/tests
+        3. http://146.139.240.17:8000/tests/select
+        4. http://146.139.240.17:8000/tests/configure_specimen
+        5. http://146.139.240.17:8000/tests/start
+        6. http://146.139.240.17:8000/report/download
+        7. http://146.139.240.17:8000/report/extract_csv
+        
+    
+    """
+    
 )
 
 class TestSelection(BaseModel):
@@ -861,11 +883,16 @@ def run_test(request: TestRunRequest):
         # Wait for test
         newton_gui.wait_for_test_complete(request.specimen_id)
         
+        batches = helper_func.extract_batches()
+        most_recent_specimen = batches[0]
+        
         # Download report
-        newton_gui.download_report(request.specimen_id)
+        newton_gui.download_report(most_recent_specimen)
+        
+        time.sleep(0.1)
 
         # Export CSV
-        csv_path = newton_gui.extract_report_to_csv(request.specimen_id)
+        csv_path = newton_gui.extract_report_to_csv(most_recent_specimen)
 
         # Return CSV
         return FileResponse(
