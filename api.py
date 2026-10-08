@@ -1,11 +1,12 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
 from typing import Literal
 from fastapi import Query
 from pydantic import BaseModel
 import time
 import asyncio
+from camera_actions import generate_frames
 from ocr.OCR_background import update_newton_data
 import ocr.OCR_background as OCR_background
 import helper_func
@@ -824,6 +825,10 @@ def live_page():
     </html>
     """
     
+@app.get("/live/stream")
+def live_feed():
+    return StreamingResponse(generate_frames(), media_type="multipart/x-mixed-replace; boundary=frame")
+    
 # Master API:
 @app.post("/tests/run")
 def run_test(request: TestRunRequest):
@@ -835,6 +840,7 @@ def run_test(request: TestRunRequest):
     2. Select a filter.
     3. Paste the filter into `"test_name"`.
     4. Provide the specimen information.
+    5. Run `/tests/run`
 
     **Raises:**
         HTTPException: show errors to the client
