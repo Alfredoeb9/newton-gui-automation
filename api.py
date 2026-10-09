@@ -134,9 +134,7 @@ def select_test(selection: TestSelection):
         )
         
     try:
-        newton_gui.set_filter_online_tab(
-            selected_filter["name"]
-        )
+        newton_gui.set_filter_online_tab(selected_filter["name"])
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -179,8 +177,6 @@ def start_test():
 
     try:
         newton_gui.start_test()
-        newton_gui.wait_for_test_complete()
-        newton_gui.confirm_finished_test()
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -459,7 +455,6 @@ def extract_csv(specimen_ID: str | None = None):
         if specimen_ID is None:
             batches = helper_func.extract_batches()
             most_recent_specimen = batches[0]
-            print(most_recent_specimen)
             csv_path = newton_gui.extract_report_to_csv(most_recent_specimen)
         else:
             csv_path = newton_gui.extract_report_to_csv(specimen_ID)
@@ -849,7 +844,6 @@ def run_test(request: TestRunRequest):
     helper_func.set_newton_size()
 
     try:
-
         # Select test
         filters = newton_gui.get_filters()
 

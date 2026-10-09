@@ -19,16 +19,11 @@ def capture_value(top_left: tuple[int, int], bottom_right: tuple[int, int]) -> I
     width = right - left
     height = bottom - top
 
-    return pyautogui.screenshot(
-        region=(left, top, width, height)
-    )
+    return pyautogui.screenshot(region=(left, top, width, height))
 
 # Extract the values in the screenshot as string
 def read_value(top_left: tuple[int, int], bottom_right: tuple[int, int]) -> str:
-    screenshot = capture_value(
-        top_left,
-        bottom_right
-    )
+    screenshot = capture_value(top_left, bottom_right)
 
     return pytesseract.image_to_string(
         screenshot,
@@ -122,25 +117,19 @@ def read_newton_values(query: str | None = None) -> dict[str, str]:
         )
 
     else:
-        raise ValueError(
-            "Invalid query. Use 'all', 'rate', or 'max'."
-        )
+        raise ValueError("Invalid query. Use 'all', 'rate', or 'max'.")
 
     # Check for empty OCR values
     missing_values = []
 
     for name, value in values.items():
-
         if not value:
             missing_values.append(name)
 
     if len(missing_values) > 0:
-        raise RuntimeError(
-            f"OCR failed to read: {', '.join(missing_values)}"
-        )
+        raise RuntimeError(f"OCR failed to read: {', '.join(missing_values)}")
     
     data = buildDataObject(values)
-    
     # Save the txt file into a logger file (Desktop/Newton/Online_Values/newton_data.txt)
     data_logger.save_reading(data, query)
 
@@ -177,9 +166,7 @@ def get_start_stop_state():
 
     start_image = np.array(Image.open(constants.START_BUTTON_IMAGE).convert("RGB"))
 
-    stop_image = np.array(
-        Image.open(constants.STOP_BUTTON_IMAGE).convert("RGB")
-    )
+    stop_image = np.array(Image.open(constants.STOP_BUTTON_IMAGE).convert("RGB"))
 
     # Make sure all images are the same size
     if current_image.shape != start_image.shape:

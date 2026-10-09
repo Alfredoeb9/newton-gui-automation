@@ -18,9 +18,7 @@ DEFAULT_Y = 115
 
 def require_admin() -> None:
     if not ctypes.windll.shell32.IsUserAnAdmin():
-        raise RuntimeError(
-            "Newton GUI API must be run as Administrator for program to see newton software."
-        )
+        raise RuntimeError("Newton GUI API must be run as Administrator for program to see newton software.")
 
 # Check if newton is running
 def require_newton_running():
