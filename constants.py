@@ -75,7 +75,7 @@ ONLINE_LOAD_RATE_VALUE_BOTTOM_RIGHT = (946, 443)
 ONLINE_LOAD_MAX_VALUE_TOP_LEFT = (807, 390)
 ONLINE_LOAD_MAX_VALUE_BOTTOM_RIGHT = (948, 413)
 
-ONLINE_CONFIRM_SUCCESSFUL_TEST = (1129, 818)
+ONLINE_CONFIRM_SUCCESSFUL_TEST = (1129, 805)
 
 # Report tab
 REPORT_MAIN_TAB = (1280, 168)
@@ -107,4 +107,4 @@ MAX_JOG_SECONDS = 10
 
 REPORTS_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports")
 CSV_REPORT_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports\Unnamed")
-DOWNLOAD_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports\Shipra data\MAX Phase creep")
+DOWNLOAD_FOLDER = Path(r"C:\Users\TRI Test Machine\Desktop\Newton Reports")

@@ -227,6 +227,7 @@ def set_filter_online_tab(filter_name: str) -> None:
 def start_test() -> None:
     helper_func.activate_newton()
     helper_func.activate_tab("ONLINE_MAIN_TAB")
+    time.sleep(0.3)
     clear_pos_tare()
     clear_load_tare()
     # if (START_FLAG == False):
@@ -282,13 +283,24 @@ def wait_for_test_complete(specimen_id: str, timeout: int = 3600):
             )
 
         time.sleep(5)
+        
+def confirm_finished_test() -> None:
+    pyautogui.click(*constants.ONLINE_CONFIRM_SUCCESSFUL_TEST)
+    pyautogui.press("esc")
+    time.sleep(0.1)
+    pyautogui.press("esc")
 
 # Report Tab
 def download_report(batchID) -> None:
     helper_func.activate_newton()
-    helper_func.activate_tab("REPORT_MAIN_TAB")
-    helper_func.activate_tab("REPORT_DOWNLOAD_TAB")
     
+    confirm_finished_test()
+    time.sleep(0.5)
+    
+    helper_func.activate_tab("REPORT_MAIN_TAB")
+    time.sleep(3.0)
+    helper_func.activate_tab("REPORT_DOWNLOAD_TAB")
+    time.sleep(2.0)
     print(f"Downloading batch {batchID}")
     
     pyautogui.click(*constants.REPORT_BATCHES_UNNAMED)
@@ -302,7 +314,9 @@ def download_report(batchID) -> None:
 def extract_report_to_csv(specimen_ID) -> str:
     helper_func.activate_newton()
     helper_func.activate_tab("REPORT_MAIN_TAB")
+    time.sleep(3.0)
     helper_func.activate_tab("REPORT_VIEW_TAB")
+    time.sleep(2.0)
     
     print(f"Downloading csv {specimen_ID}")
     
@@ -337,7 +351,3 @@ def extract_report_to_csv(specimen_ID) -> str:
 
     return str(csv_path)
 
-def confirm_finished_test() -> None:
-    pyautogui.click(*constants.ONLINE_CONFIRM_SUCCESSFUL_TEST)
-    pyautogui.press("esc")
-    pyautogui.press("esc")

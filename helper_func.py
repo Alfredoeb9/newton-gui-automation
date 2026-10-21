@@ -5,10 +5,13 @@ import constants
 import time
 import win32gui
 import win32con
+import win32api
 from fastapi import HTTPException
 from pywinauto import Desktop
 from pathlib import Path
 import newton_gui
+from datetime import datetime
+import re
 
 DEFAULT_WIDTH = 1300
 DEFAULT_HEIGHT = 803
@@ -89,16 +92,38 @@ def set_newton_size():
 
         if hwnd:
             print("Newton found.")
+            
+            # Restore the window before measuring it.
+            win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
 
-            left, top, _, _ = win32gui.GetWindowRect(hwnd)
+            # Get screen boundaries.
+            screen_width = win32api.GetSystemMetrics(win32con.SM_CXSCREEN)
+            screen_height = win32api.GetSystemMetrics(win32con.SM_CYSCREEN)
+
+            # left, top, _, _ = win32gui.GetWindowRect(hwnd)
+            
+            width = min(DEFAULT_WIDTH, screen_width)
+            height = min(DEFAULT_HEIGHT, screen_height)
                 
             win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
             
-            win32gui.SetWindowPos(hwnd, None, left, top, DEFAULT_WIDTH, DEFAULT_HEIGHT, win32con.SWP_NOZORDER)
+            new_left = 310
+            new_top = 115
+            
+            win32gui.SetWindowPos(
+                hwnd,
+                None,
+                new_left,
+                new_top,
+                width,
+                height,
+                win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE
+            )
 
             print(
-                f"Newton resized to "
-                f"{DEFAULT_WIDTH} x {DEFAULT_HEIGHT}"
+                f"Newton positioned at ({new_left}, {new_top}) "
+                f"with size {min(DEFAULT_WIDTH, screen_width)} x "
+                f"{min(DEFAULT_HEIGHT, screen_height)}"
             )
 
             break
@@ -184,23 +209,31 @@ def clear_input_field(x: int, y: int, main_tab: str | None = None) -> None:
     
     pyautogui.click(x, y, clicks=3, interval=0.1)
     pyautogui.press("backspace")
-    
+
 def extract_batches():
     cmm_files = constants.DOWNLOAD_FOLDER.rglob("*.cmm")
-
     unique_files = {}
 
     for file in cmm_files:
         unique_files[file.stem.lower()] = file
 
+    def get_batch_timestamp(file):
+        match = re.search(r"(\d{8}_\d{6})$", file.stem)
+
+        if not match:
+            return datetime.min
+
+        return datetime.strptime(match.group(1), "%m%d%Y_%H%M%S")
+
     batches = sorted(
         unique_files.values(),
-        key=lambda file: file.stat().st_mtime,
+        key=get_batch_timestamp,
         reverse=True
     )
 
     if not batches:
         raise FileNotFoundError("No .cmm batch files found.")
 
-    batch_names = [file.stem for file in batches]
-    return batch_names
+    return [file.stem for file in batches]
+
+set_newton_size()

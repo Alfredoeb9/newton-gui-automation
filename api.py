@@ -431,7 +431,7 @@ def download_report(batchID: str | None = None):
     try:
         if batchID is None:
             batches = helper_func.extract_batches()
-            most_recent_specimen = batches[0].stem
+            most_recent_specimen = batches[0]
             report = newton_gui.download_report(most_recent_specimen)
         else:
             report = newton_gui.download_report(batchID)
