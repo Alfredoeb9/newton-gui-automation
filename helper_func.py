@@ -90,9 +90,7 @@ def set_newton_size():
     while True:
         hwnd = find_newton_window()
 
-        if hwnd:
-            print("Newton found.")
-            
+        if hwnd:            
             # Restore the window before measuring it.
             win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
 
@@ -118,12 +116,6 @@ def set_newton_size():
                 width,
                 height,
                 win32con.SWP_NOZORDER | win32con.SWP_NOACTIVATE
-            )
-
-            print(
-                f"Newton positioned at ({new_left}, {new_top}) "
-                f"with size {min(DEFAULT_WIDTH, screen_width)} x "
-                f"{min(DEFAULT_HEIGHT, screen_height)}"
             )
 
             break

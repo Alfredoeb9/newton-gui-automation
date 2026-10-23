@@ -99,6 +99,69 @@ REPORT_VIEW_SELECT_FOLDER_BTN = (1433, 718)
 REPORT_VIEW_COMPLETE_CSV_BTN = (950, 580)
 REPORT_VIEW_EXIT_CSV_BTN = (1206, 312)
 
+TEST_MANAGEMENT_MAIN_TAB = (735, 165)
+TEST_MANAGEMENT_TAB_CONFIRM = (896, 576)
+TEST_SEARCH_BAR = (401, 306)
+TEST_AVAILABLE_TL = (358, 351)
+TEST_AVAILABLE_BR = (938, 862)
+TEST_EDIT_BUTTON = (984, 390)
+TEST_BACK_BUTTON = (341, 215)
+TEST_NEXT_BUTTON = (1575, 215)
+TEST_GEN_SPECIMEN_BUTTON = (1070, 270)
+PROFILE_SEGMENT_TABS = [(486, 393),(538, 393)]
+TEST_SEG_1 = (486, 393)
+TEST_SEG_2 = (538, 393)
+TEST_SEG_EDIT_BUTTON = (1550, 459)
+TEST_SEG_PRE_COND_BTN = (483, 272)
+TEST_SEG_PRELOAD_DIR_INPUT = (921, 359)
+TEST_CHANNEL_BTN = (1121, 270)
+TEST_CHANNEL_CONTROL_DROP_DOWN = (548, 382)
+TEST_CHANNEL_PROFILE_SET_BTN = (919, 380)
+TEST_CHANNEL_END_CHANNEL_INPUT= (928, 497)
+
+PROFILE_CONTROL_CHANNELS = ("Position", "Load", "Stress", "Strain")
+RAMP_PROFILE_NAMES = {"Up Ramp", "Down Ramp", "Dwell"}
+RAMP_END_CHANNEL_OPTIONS = (
+    "Position",
+    "Load",
+    "Stress",
+    "Strain",
+    "HL1",
+    "HL2",
+    "Time",
+    "Set Point",
+)
+
+
+PROFILE_SEGMENT_PRECOND_FIELDS = {
+    "preload_value":       ((562, 348), (649, 375), False),
+    "preload_rate":        ((718, 349), (806, 375), True),
+    "preload_direction":   ((1002, 346), (1216, 373), True)
+}
+
+PROFILE_SEGMENT_CONTROL_FIELDS = {
+    "channel_proportional":    ((562, 348), (649, 375), False),
+    "channel_integral":             ((718, 349), (806, 375), True),
+    "channel_derivative":        ((1002, 346), (1216, 373), True)
+}
+
+PROFILE_SEGMENT_PROFILE_FIELDS = {
+    "profile_rate":             ((718, 349), (806, 375), True),
+    "profile_duration":        ((1002, 346), (1216, 373), True)
+}
+
+RAMP_SETTINGS_FIELDS = {
+    # "profile": (PROFILE_NAME_TOP_LEFT, PROFILE_NAME_BOTTOM_RIGHT, False),
+    "rate": ((1063, 367), (1147, 392), True),
+    # "end_channel": (RAMP_END_CHANNEL_TOP_LEFT, RAMP_END_CHANNEL_BOTTOM_RIGHT, False),
+    "end_value": ((1063, 480), (1147, 508), True),
+}
+
+RAMP_END_CHANNEL_OPTIONS = (
+    "Position", "Load", "Stress", "Strain",
+    "HL1", "HL2", "Time", "Set Point",
+)
+
 # GUI interaction
 HIGHLIGHT_BOX_CLICK = 3
 
