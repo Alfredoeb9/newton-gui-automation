@@ -9,7 +9,7 @@ import win32api
 from fastapi import HTTPException
 from pywinauto import Desktop
 from pathlib import Path
-import newton_gui
+
 from datetime import datetime
 import re
 
@@ -25,6 +25,8 @@ def require_admin() -> None:
 
 # Check if newton is running
 def require_newton_running():
+    import newton_gui
+    
     if not newton_gui.is_newton_running():
         raise HTTPException(
             status_code=503,
